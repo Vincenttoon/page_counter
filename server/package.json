@@ -1,5 +1,5 @@
 {
-  "name": "server",
+  "name": "page_counter_server",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
