@@ -2,8 +2,10 @@
   "name": "server",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
+    "start": "node server.js",
+    "watch": "nodemon",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -18,5 +20,8 @@
     "mongoose": "^7.6.0",
     "save": "^2.9.0",
     "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
   }
 }
