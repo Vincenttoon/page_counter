@@ -2,6 +2,8 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 const bcrypt = require("bcrypt");
 
+const dateFormat = require("../utils/dateFormat");
+
 const userSchema = new Schema({
   username: {
     type: String,
@@ -26,6 +28,12 @@ const userSchema = new Schema({
       ref: "BooksRead",
     },
   ],
+  savedBooks: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "SavedBooks",
+    },
+  ],
   worms: [
     {
       type: Schema.Types.ObjectId,
@@ -36,10 +44,12 @@ const userSchema = new Schema({
     createdAt: {
       type: Date,
       default: Date.now,
+      get: (timestamp) => dateFormat(timestamp),
     },
     updatedAt: {
       type: Date,
       default: Date.now,
+      get: (timestamp) => dateFormat(timestamp),
     },
   },
 });
@@ -71,6 +81,14 @@ userSchema.methods.calculateTotalPagesRead = async function () {
   );
   return totalPagesRead;
 };
+
+userSchema.virtual("booksReadCount").get(function () {
+  return this.booksRead.length;
+});
+
+userSchema.virtual("savedBooksCount").get(function () {
+  return this.savedBooks.length;
+});
 
 // friends list length
 userSchema.virtual("wormCount").get(function () {
