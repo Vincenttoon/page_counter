@@ -32,6 +32,16 @@ const userSchema = new Schema({
       ref: "Worms",
     },
   ],
+  dates: {
+    createdAt: {
+      type: Date,
+      default: Date.now,
+    },
+    updatedAt: {
+      type: Date,
+      default: Date.now,
+    },
+  },
 });
 
 // set up pre-save middleware to create password
@@ -41,6 +51,9 @@ userSchema.pre("save", async function (next) {
     this.password = await bcrypt.hash(this.password, saltRounds);
   }
 
+  // Update the updatedAt field when saving
+  this.dates.updatedAt = new Date();
+
   next();
 });
 
@@ -49,8 +62,19 @@ userSchema.methods.isCorrectPassword = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
 
-userSchema.virtual("wormCount").get(function() {
-    return this.worms.length;
+// Calculate total pages read
+userSchema.methods.calculateTotalPagesRead = async function () {
+  const booksRead = await BooksRead.find({ user: this._id });
+  const totalPagesRead = booksRead.reduce(
+    (total, bookRead) => total + bookRead.pagesRead,
+    0
+  );
+  return totalPagesRead;
+};
+
+// friends list length
+userSchema.virtual("wormCount").get(function () {
+  return this.worms.length;
 });
 
 const User = mongoose.model("User", userSchema);
