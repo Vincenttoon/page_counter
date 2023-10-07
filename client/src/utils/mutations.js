@@ -60,3 +60,32 @@ export const REMOVE_SAVED_BOOK = gql`
     }
   }
 `;
+
+export const ADD_WORM = gql`
+  mutation addWorm($id: ID!) {
+    addWorm(wormId: $id) {
+      _id
+      username
+      worms {
+        _id
+        user
+        wormCount
+        booksReadCount
+      }
+    }
+  }
+`;
+
+export const REMOVE_WORM = gql`
+  mutation removeWorm($id: ID!) {
+    removeWorm(wormId: $id) {
+        _id
+        username
+        worms {
+            _id
+            worms
+        }
+    }
+  }
+`
+
