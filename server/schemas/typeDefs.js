@@ -1,7 +1,7 @@
 const { gql } = require("apollo-server-express");
 
 const typeDefs = gql`
-type User {
+  type User {
     _id: ID
     username: String
     email: String
@@ -12,7 +12,7 @@ type User {
     worms: [Worms]
     wormsCount: Int
   }
-  
+
   type BooksRead {
     _id: ID
     user: User
@@ -22,31 +22,7 @@ type User {
     pagesRead: Int
     createdAt: String
   }
-  
-  input ReadBookInput {
-    bookInfoId: ID!
-    review: String!
-    rating: Float!
-    pagesRead: Int!
-  }
-  
-  input UpdateRatingInput {
-    bookReadId: ID!
-    rating: Float!
-  }
-  
-  input UpdateReviewInput {
-    bookReadId: ID!
-    review: String!
-  }
-  
-  type SavedBooks {
-    _id: ID
-    user: User
-    bookInfo: BookInfo
-    savedAt: String
-  }
-  
+
   type BookInfo {
     _id: ID
     authors: String
@@ -57,13 +33,13 @@ type User {
     title: String
     averageRating: Float
   }
-  
+
   type Worms {
     _id: ID
     user: User
     friends: [User]
   }
-  
+
   type Comment {
     _id: ID
     user: User
@@ -71,12 +47,19 @@ type User {
     text: String
     createdAt: String
   }
-  
+
   type Auth {
     token: ID!
     user: User
   }
-  
+
+  type SavedBooks {
+    _id: ID
+    user: User
+    bookInfo: BookInfo
+    savedAt: String
+  }
+
   type Query {
     me: User
     allUsers: [User]
@@ -84,12 +67,9 @@ type User {
     allBooksRead(username: String): [BooksRead]
     allSavedBooks(username: String): [SavedBooks]
   }
-  
-  input SaveBookInput {
-    bookInfo: ID!
-  }
-  
+
   type Mutation {
+    # Define your mutations here
     login(email: String!, password: String!): Auth
     addUser(username: String!, email: String!, password: String!): Auth
     saveBook(input: SaveBookInput!): SaveBookResponse
@@ -103,34 +83,56 @@ type User {
     addComment(bookReadId: ID!, text: String!): Comment
     deleteComment(commentId: ID!): String
   }
-  
-  # Boolean responses for mutations:
-  
+
+  input SaveBookInput {
+    bookInfo: ID!
+  }
+
+  input ReadBookInput {
+    bookInfoId: ID!
+    review: String!
+    rating: Float!
+    pagesRead: Int!
+  }
+
+  input UpdateRatingInput {
+    bookReadId: ID!
+    rating: Float!
+  }
+
+  input UpdateReviewInput {
+    bookReadId: ID!
+    review: String!
+  }
+
+  # Define Boolean responses
   type SaveBookResponse {
     success: Boolean!
     message: String!
     user: User
   }
-  
+
   type RemoveSavedBookResponse {
     success: Boolean!
     message: String!
     user: User
   }
-  
+
   type AddWormResponse {
     success: Boolean!
     message: String!
-    user: User 
+    user: User
   }
-  
+
   type RemoveWormResponse {
     success: Boolean!
     message: String!
     user: User
   }
-  
+
   type DeletionResponse {
     message: String
   }
-`
+`;
+
+module.exports = typeDefs;
