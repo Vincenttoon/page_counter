@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
+const Comment = require('./Comment')
 const dateFormat = require("../utils/dateFormat");
 
 const booksReadSchema = new Schema({
@@ -30,7 +31,12 @@ const booksReadSchema = new Schema({
     default: Date.now,
     get: (timestamp) => dateFormat(timestamp),
   },
+  comments: [Comment]
 });
+
+booksReadSchema.virtual("commentCount").get(function() {
+  return this.comments.length
+})
 
 const BooksRead = mongoose.model("BooksRead", booksReadSchema);
 
