@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
+const dateFormat = require("../utils/dateFormat");
+
 const booksReadSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
@@ -23,6 +25,11 @@ const booksReadSchema = new Schema({
     },
   },
   pagesRead: Number,
+  createdAt: {
+    type: Date,
+    default: Date.now,
+    get: (timestamp) => dateFormat(timestamp),
+  },
 });
 
 const BooksRead = mongoose.model("BooksRead", booksReadSchema);
