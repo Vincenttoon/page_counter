@@ -79,13 +79,135 @@ export const ADD_WORM = gql`
 export const REMOVE_WORM = gql`
   mutation removeWorm($id: ID!) {
     removeWorm(wormId: $id) {
+      _id
+      username
+      worms {
         _id
-        username
-        worms {
-            _id
-            worms
-        }
+        worms
+      }
     }
   }
-`
+`;
 
+export const READ_BOOK = gql`
+  mutation readBook(
+    $bookInfoId: ID!
+    $review: String
+    $rating: Float
+    $pagesRead: Int
+  ) {
+    readBook(
+      bookInfoId: $bookInfoId
+      review: $review
+      rating: $rating
+      pagesRead: $pagesRead
+    ) {
+      _id
+      user
+      bookInfo {
+        _id
+        authors
+        description
+        bookId
+        image
+        link
+        title
+        averageRating
+      }
+      review
+      rating
+      pagesRead
+      createdAt
+      comments {
+        _id
+        user
+        text
+        createdAt
+      }
+    }
+  }
+`;
+
+export const UPDATE_RATING = gql`
+  mutation updateRating($bookReadId: ID!, $rating: Float!) {
+    updateRating(bookReadId: $bookReadId, rating: $rating) {
+      _id
+      user
+      bookInfo {
+        _id
+        authors
+        description
+        bookId
+        image
+        link
+        title
+        averageRating
+      }
+      review
+      rating
+      pagesRead
+      createdAt
+      comments {
+        _id
+        user
+        text
+        createdAt
+      }
+    }
+  }
+`;
+
+export const UPDATE_REVIEW = gql`
+  mutation updateReview($bookReadId: ID!, $review: String!) {
+    updateReview(bookReadId: $bookReadId, review: $review) {
+      _id
+      user
+      bookInfo {
+        _id
+        authors
+        description
+        bookId
+        image
+        link
+        title
+        averageRating
+      }
+      review
+      rating
+      pagesRead
+      createdAt
+      comments {
+        _id
+        user
+        text
+        createdAt
+      }
+    }
+  }
+`;
+
+export const DELETE_REVIEW = gql`
+  mutation deleteReview($bookReadId: ID!) {
+    deleteReview(bookReadId: $bookReadId) {
+      message
+    }
+  }
+`;
+
+export const ADD_COMMENT = gql`
+  mutation addComment($bookReadId: ID!, $text: String!) {
+    addComment(bookReadId: $bookReadId, text: $text) {
+      _id
+      user
+      booksRead
+      text
+      createdAt
+    }
+  }
+`;
+
+export const DELETE_COMMENT = gql`
+  mutation deleteComment($commentId: ID!) {
+    deleteComment(commentId: $commentId)
+  }
+`;
