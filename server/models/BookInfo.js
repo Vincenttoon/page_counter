@@ -28,6 +28,10 @@ const bookInfoSchema = new Schema({
     type: Number,
     default: 0, // Default to 0 if there are no reviews yet
   },
+  pageCount: {
+    type: Number,
+    default: 0
+  }
 });
 
 const BookInfo = mongoose.model("BookInfo", bookInfoSchema);

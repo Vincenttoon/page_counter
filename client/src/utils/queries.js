@@ -23,6 +23,7 @@ export const QUERY_ME = gql`
           link
           title
           averageRating
+          pageCount
         }
         comments {
           _id
@@ -44,6 +45,7 @@ export const QUERY_ME = gql`
             link
             title
             averageRating
+            pageCount
           }
         }
         savedBooksCount
@@ -136,6 +138,7 @@ export const QUERY_ALL_BOOKS_READ = gql`
         link
         title
         averageRating
+        pageCount
       }
       comments {
         _id
@@ -156,6 +159,7 @@ export const QUERY_ALL_BOOKS_READ = gql`
           link
           title
           averageRating
+          pageCount
         }
       }
       worms {
@@ -180,6 +184,7 @@ export const BASIC_QUERY_ALL_BOOKS_READ = gql`
             link
             image
             averageRating
+            pageCount
         }
         commentCount
     }
@@ -201,6 +206,7 @@ export const QUERY_ALL_SAVED_BOOKS = gql`
         link
         title
         averageRating
+        pageCount
       }
     }
   }

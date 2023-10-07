@@ -46,6 +46,7 @@ export const SAVE_BOOK = gql`
             link
             title
             averageRating
+            pageCount
           }
         }
       }
@@ -113,6 +114,7 @@ export const READ_BOOK = gql`
         link
         title
         averageRating
+        pageCount
       }
       review
       rating
@@ -142,6 +144,7 @@ export const UPDATE_RATING = gql`
         link
         title
         averageRating
+        pageCount
       }
       review
       rating
@@ -171,6 +174,7 @@ export const UPDATE_REVIEW = gql`
         link
         title
         averageRating
+        pageCount
       }
       review
       rating

@@ -32,6 +32,7 @@ const typeDefs = gql`
     link: String
     title: String
     averageRating: Float
+    pageCount: Int
   }
 
   type Worms {
