@@ -97,6 +97,14 @@ const resolvers = {
         return { token, user };
       },
 
+       // mutation for adding users to database through GraphQl
+    addUser: async (parent, args) => {
+      const user = await User.create(args);
+      const token = signToken(user);
+
+      return { token, user };
+    },
+
     // Save book for later vvv
 
     saveBook: async (parent, { input }, context) => {
