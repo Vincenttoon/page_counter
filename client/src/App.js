@@ -11,6 +11,7 @@ import { setContext } from "@apollo/client/link/context";
 import Header from './components/Header';
 
 import Signup from './pages/Signup';
+import Login from './pages/Login';
 import Feed from './pages/Feed';
 
 import './App.css';
@@ -47,6 +48,7 @@ function App() {
           <Routes>
             <Route path="" element={<Feed />} />
             <Route path="/signup" element={<Signup />} />
+            <Route path="/login" element={<Login />} />
           </Routes>
         </div>
       </Router>

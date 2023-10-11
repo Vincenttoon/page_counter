@@ -1,0 +1,67 @@
+/* Signup.scss */
+@import "colors";
+@import "media-queries";
+
+/* Center the form on the page */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 2rem;
+}
+
+/* Style the form */
+.login-form {
+  max-width: 400px; /* Adjust this value as needed */
+  width: 100%; /* Allow the form to expand to the full width of its container */
+  padding: 20px;
+  background-color: $green; /* You can use your own color variable or hex code */
+  border: 1px solid $black; /* Use your color variables or hex codes */
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba($green, 0.1);
+  color: $darkBlue;
+}
+
+h2 {
+  font-size: 1.5rem;
+  margin: 0 0 20px;
+}
+
+.form-group {
+  width: 100%;
+  margin-bottom: 15px;
+
+  label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+
+  input {
+    width: 90%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+}
+
+.error-message {
+  color: #ff0000;
+  margin-top: 10px;
+}
+
+button {
+  background-color: $blue; /* Use your own color variables or hex codes */
+  color: $light;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  font-size: 1rem;
+
+  &:hover {
+    background-color: $peach; /* Use your own color variables or hex codes */
+    color: $darkBlue;
+  }
+}

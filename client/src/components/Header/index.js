@@ -33,7 +33,7 @@ const Header = () => {
             <Link to="/worms">Worms</Link>
             <Link to="/settings">Settings</Link>
             <Link to="/story">Story</Link>
-            <Link to="/" onClick={logout}>
+            <Link to="/" onClick={logout} className="logout-btn">
               Logout
             </Link>
           </>
