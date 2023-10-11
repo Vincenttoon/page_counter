@@ -13,7 +13,8 @@
   color: $black;
 
   @include mobile {
-    flex-direction: row; /* Change flex direction for mobile */
+    flex-direction: row;
+    padding: 1rem; /* Change flex direction for mobile */
   }
 }
 
@@ -24,19 +25,20 @@
     text-decoration: none;
     text-decoration-color: $peach;
     font-family: "Sail", serif;
-    background: linear-gradient(to right, $red, $peach,);
+    background: linear-gradient(to right, $blue, $peach);
     -webkit-background-clip: text;
     color: transparent;
 
     &:hover {
-      text-shadow: 1.5px 1.5px 2px rgba($black, 0.5);
+      text-shadow: 1px 1px 1px rgba($black, 0.25);
     }
 
     @include mobile {
       align-self: center; /* Center the logo vertically for mobile */
       margin-bottom: 1rem;
       margin-top: 1rem;
-      margin-left: 4.5rem; /* Add space below logo on mobile */
+      margin-left: 3.25rem;
+      padding-right: .25rem /* Add space below logo on mobile */
     }
   }
 }
@@ -93,16 +95,19 @@
 
 .mobile-nav-div {
   margin-right: 1rem;
-  margin-top: 0.5rem;
+  margin-top: 0.7rem;
   font-size: 2rem;
   color: $black;
 }
 
 .mobile-nav-link {
   color: $black;
-  text-shadow: 1px 1px 2px rgba($red, 0.5);
+  text-shadow: 1px 1px 2px rgba($blue, 0.5);
+  text-decoration: none;
 }
 
 .mobile-nav-link:active {
   color: $green;
+  text-decoration: underline;
+  text-decoration-color: $blue;
 }
