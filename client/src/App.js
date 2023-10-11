@@ -10,13 +10,14 @@ import { setContext } from "@apollo/client/link/context";
 
 import Header from './components/Header';
 
+import Signup from './pages/Signup';
 import Feed from './pages/Feed';
 
 import './App.css';
 
 // create http link to connect to graphQl backend
 const httpLink = createHttpLink({
-  uri: "/graphql",
+  uri: "http://localhost:3003/graphql"
 });
 
 // Set AuthLink to tokens for authorization of logged in users
@@ -45,6 +46,7 @@ function App() {
         <div className="container">
           <Routes>
             <Route path="" element={<Feed />} />
+            <Route path="/signup" element={<Signup />} />
           </Routes>
         </div>
       </Router>
