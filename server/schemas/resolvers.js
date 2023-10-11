@@ -81,28 +81,45 @@ const resolvers = {
     // Login vvv
 
     login: async (parent, { email, password }) => {
-        const user = await User.findOne({ email });
-    
-        if (!user) {
-          throw new AuthenticationError("Incorrect credentials");
-        }
-    
-        const correctPw = await user.isCorrectPassword(password);
-    
-        if (!correctPw) {
-          throw new AuthenticationError("Incorrect credentials");
-        }
-    
-        const token = signToken(user);
-        return { token, user };
-      },
+      const user = await User.findOne({ email });
 
-       // mutation for adding users to database through GraphQl
-    addUser: async (parent, args) => {
-      const user = await User.create(args);
+      if (!user) {
+        throw new AuthenticationError("Incorrect credentials");
+      }
+
+      const correctPw = await user.isCorrectPassword(password);
+
+      if (!correctPw) {
+        throw new AuthenticationError("Incorrect credentials");
+      }
+
       const token = signToken(user);
-
       return { token, user };
+    },
+
+    // mutation for adding users to database through GraphQl
+    addUser: async (parent, args) => {
+      try {
+        // Check if a user with the same email or username already exists
+        const existingUser = await User.findOne({
+          $or: [{ email: args.email }, { username: args.username }],
+        });
+
+        if (existingUser) {
+          // User with the same email or username already exists
+          return new Error("User with this email or username already exists.");
+        }
+
+        // If no existing user, create a new user
+        const user = await User.create(args);
+        const token = signToken(user);
+
+        return { token, user };
+      } catch (error) {
+        // Handle other errors, such as database errors
+        console.error(error);
+        return new Error("An error occurred while creating the user.");
+      }
     },
 
     // Save book for later vvv

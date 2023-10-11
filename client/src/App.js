@@ -13,6 +13,7 @@ import Header from './components/Header';
 import Signup from './pages/Signup';
 import Login from './pages/Login';
 import Feed from './pages/Feed';
+import Story from './pages/Story';
 
 import './App.css';
 
@@ -49,6 +50,7 @@ function App() {
             <Route path="" element={<Feed />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/story" element={<Story />} />
           </Routes>
         </div>
       </Router>
