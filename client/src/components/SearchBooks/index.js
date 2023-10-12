@@ -1,9 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useMutation } from "@apollo/client";
 import "../../styles/SearchBooks.scss";
+import { SAVE_BOOK, READ_BOOK } from "../../utils/mutations";
+import Auth from "../../utils/auth";
 
 const SearchBooks = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
+
+  // Define the reviewBook and saveBook mutations and get the error and loading states
+  const [reviewBook, { loading: reviewLoading, error: reviewError }] =
+    useMutation(READ_BOOK);
+  const [saveBook, { loading: saveLoading, error: saveError }] =
+    useMutation(SAVE_BOOK);
 
   const handleSearch = async () => {
     try {
@@ -15,6 +24,39 @@ const SearchBooks = () => {
     } catch (error) {
       console.error("Error searching Google Books API:", error);
     }
+  };
+
+  useEffect(() => {
+    if (Auth.loggedIn()) {
+      console.log("User is logged in");
+    } else {
+      console.log("User is not logged in");
+    }
+  }, []);
+
+  // Handle the reviewBook and saveBook mutations when the buttons are clicked
+  const handleReviewBook = (book) => {
+    // Ensure you have implemented the logic for the reviewBook mutation
+    reviewBook({
+      variables: {
+        input: {
+          // Pass the book data as required by your mutation
+          // For example: bookId, review, rating, pagesRead, etc.
+        },
+      },
+    });
+  };
+
+  const handleSaveBook = (book) => {
+    // Ensure you have implemented the logic for the saveBook mutation
+    saveBook({
+      variables: {
+        input: {
+          // Pass the book data as required by your mutation
+          // For example: bookId, userId, savedAt, etc.
+        },
+      },
+    });
   };
 
   return (
@@ -33,12 +75,41 @@ const SearchBooks = () => {
       <div className="search-results">
         {searchResults.map((book, index) => (
           <div key={index} className="search-result">
-            <h3>{book.volumeInfo.title}</h3>
-            <p>
-              {book.volumeInfo.authors &&
-                `Authors: ${book.volumeInfo.authors.join(", ")}`}
-            </p>
-            <p>{book.volumeInfo.description}</p>
+            <h3>Title: {book.volumeInfo.title}</h3>
+            {book.volumeInfo.authors && (
+              <p>Author(s): {book.volumeInfo.authors.join(", ")}</p>
+            )}
+            {book.volumeInfo.description && (
+              <p>Description: {book.volumeInfo.description}</p>
+            )}
+            {book.volumeInfo.imageLinks && (
+              <img
+                src={book.volumeInfo.imageLinks.thumbnail}
+                alt={`Cover of ${book.volumeInfo.title}`}
+              />
+            )}
+            {book.volumeInfo.pageCount && (
+              <p>Page Count: {book.volumeInfo.pageCount}</p>
+            )}
+            {book.volumeInfo.averageRating && (
+              <p>Average Rating: {book.volumeInfo.averageRating}</p>
+            )}
+            {Auth.loggedIn() && (
+              <div>
+                <button
+                  className="book-btn"
+                  onClick={() => handleReviewBook(book)}
+                >
+                  Log
+                </button>
+                <button
+                  className="book-btn"
+                  onClick={() => handleSaveBook(book)}
+                >
+                  Stash
+                </button>
+              </div>
+            )}
           </div>
         ))}
       </div>
