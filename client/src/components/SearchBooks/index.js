@@ -3,6 +3,7 @@ import { useMutation } from "@apollo/client";
 import "../../styles/SearchBooks.scss";
 import { SAVE_BOOK, READ_BOOK } from "../../utils/mutations";
 import Auth from "../../utils/auth";
+import { FaSearch, FaBookOpen } from "react-icons/fa";
 
 const SearchBooks = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -59,17 +60,30 @@ const SearchBooks = () => {
     });
   };
 
+  // Function to toggle the description truncation
+  const toggleDescription = (index) => {
+    const updatedSearchResults = [...searchResults];
+    updatedSearchResults[index].truncateDescription =
+      !updatedSearchResults[index].truncateDescription;
+    setSearchResults(updatedSearchResults);
+  };
+
   return (
     <div>
-      <h2>Search Google Books</h2>
-      <div className="search-bar">
-        <input
-          type="text"
-          placeholder="Search for books..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-        <button onClick={handleSearch}>Search</button>
+      <div className="search-div">
+        <h2>
+          <FaSearch /> Search Books <FaBookOpen />{" "}
+        </h2>
+        <p> ~ search powered by Google Books Api </p>
+        <div className="search-bar">
+          <input
+            type="text"
+            placeholder="Search for books..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <button onClick={handleSearch}>Search</button>
+        </div>
       </div>
 
       <div className="search-results">
@@ -79,15 +93,28 @@ const SearchBooks = () => {
             {book.volumeInfo.authors && (
               <p>Author(s): {book.volumeInfo.authors.join(", ")}</p>
             )}
-            {book.volumeInfo.description && (
-              <p>Description: {book.volumeInfo.description}</p>
-            )}
             {book.volumeInfo.imageLinks && (
               <img
                 src={book.volumeInfo.imageLinks.thumbnail}
                 alt={`Cover of ${book.volumeInfo.title}`}
               />
             )}
+
+            {book.volumeInfo.description && (
+              <div>
+                <p>
+                  {book.truncateDescription
+                    ? book.volumeInfo.description
+                    : `${book.volumeInfo.description.slice(0, 100)}...`}
+                </p>
+                {book.volumeInfo.description.length > 100 && (
+                  <button onClick={() => toggleDescription(index)}>
+                    {book.truncateDescription ? "Show Less" : "Show More"}
+                  </button>
+                )}
+              </div>
+            )}
+
             {book.volumeInfo.pageCount && (
               <p>Page Count: {book.volumeInfo.pageCount}</p>
             )}
