@@ -1,4 +1,65 @@
 @import "colors";
+@import "media-queries";
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+}
+
+.search-div {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center; /* Center content horizontally */
+  text-align: center; /* Center text */
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.h2-search-books {
+    font-family: 'Cinzel', serif;
+}
+
+.p-search {
+    margin: 1rem;
+    font-family: 'Cinzel';
+    font-size: 12px;
+}
+
+.search-bar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 75%;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.input-text {
+    width: 60%;
+    background-color: $white;
+    box-shadow: 2px 2px 4px rgba($black, 0.5);
+
+    &:focus {
+        outline: 2px solid $darkGreen;
+    }
+}
+
+.search-btn {
+    width: 25%;
+    box-shadow: 2px 2px 4px rgba($black, 0.5);
+
+    &:hover {
+        color: $peach;
+        background-color: $darkGreen;
+    }
+}
+
 
 .search-results {
   display: flex;
@@ -10,12 +71,12 @@
 }
 
 .search-result {
-  background-color: #fff;
-  border: 1px solid #e0e0e0;
+  background-color: $green;
+  border: 1px solid $black;
   border-radius: 8px;
   padding: 20px;
   width: 300px; // Adjust the width as needed
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 2px 2px 4px rgba($darkGreen, 0.5);
   transition: transform 0.2s;
 
   &:hover {
@@ -43,7 +104,7 @@
     margin-top: 10px;
   }
 
-  .book-btn {
+  .log-btn, .stash-btn {
     background-color: #007bff;
     color: #fff;
     border: none;
@@ -52,13 +113,43 @@
     font-size: 1rem;
     cursor: pointer;
     margin-top: 10px;
+    width: 40%;
 
     &:first-child {
       margin-right: 10px;
     }
+  }
+
+  .log-btn {
+    background-color: $darkGreen;
+    color: $peach;
 
     &:hover {
-      background-color: #0056b3;
-    }
+        background-color: $darkBrown;
+        color: $light;
+      }
   }
+
+  .stash-btn {
+    background-color: $darkBlue;
+    color: $peach;
+
+    &:hover {
+        background-color: $peach;
+        color: $darkBlue;
+      }
+  }
+}
+
+.desc-div {
+    margin: 1rem;
+}
+
+.desc-btn {
+    margin: 1rem;
+
+    &:hover {
+        background-color: $white;
+        color: $blue;
+    }
 }

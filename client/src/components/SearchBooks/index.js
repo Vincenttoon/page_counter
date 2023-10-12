@@ -69,20 +69,21 @@ const SearchBooks = () => {
   };
 
   return (
-    <div>
+    <div className="container">
       <div className="search-div">
-        <h2>
-          <FaSearch /> Search Books <FaBookOpen />{" "}
+        <h2 className="h2-search-books">
+          <FaSearch /> Find Books <FaBookOpen />{" "}
         </h2>
-        <p> ~ search powered by Google Books Api </p>
+        <p className="p-search"> ~ search powered by <a href="https://developers.google.com/books">Google Books Api</a>  ~ </p>
         <div className="search-bar">
           <input
             type="text"
             placeholder="Search for books..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
+            className="input-text"
           />
-          <button onClick={handleSearch}>Search</button>
+          <button onClick={handleSearch} className="search-btn">Search</button>
         </div>
       </div>
 
@@ -91,7 +92,7 @@ const SearchBooks = () => {
           <div key={index} className="search-result">
             <h3>Title: {book.volumeInfo.title}</h3>
             {book.volumeInfo.authors && (
-              <p>Author(s): {book.volumeInfo.authors.join(", ")}</p>
+              <h4>Author(s):<p>{book.volumeInfo.authors.join(", ")}</p></h4>
             )}
             {book.volumeInfo.imageLinks && (
               <img
@@ -101,14 +102,14 @@ const SearchBooks = () => {
             )}
 
             {book.volumeInfo.description && (
-              <div>
+              <div className="desc-div">
                 <p>
                   {book.truncateDescription
                     ? book.volumeInfo.description
                     : `${book.volumeInfo.description.slice(0, 100)}...`}
                 </p>
                 {book.volumeInfo.description.length > 100 && (
-                  <button onClick={() => toggleDescription(index)}>
+                  <button onClick={() => toggleDescription(index)} className="desc-btn">
                     {book.truncateDescription ? "Show Less" : "Show More"}
                   </button>
                 )}
@@ -124,13 +125,13 @@ const SearchBooks = () => {
             {Auth.loggedIn() && (
               <div>
                 <button
-                  className="book-btn"
+                  className="log-btn"
                   onClick={() => handleReviewBook(book)}
                 >
                   Log
                 </button>
                 <button
-                  className="book-btn"
+                  className="stash-btn"
                   onClick={() => handleSaveBook(book)}
                 >
                   Stash
