@@ -8,18 +8,19 @@ import {
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 
-import Header from './components/Header';
+import Header from "./components/Header";
+import Footer from "./components/Footer";
 
-import Signup from './pages/Signup';
-import Login from './pages/Login';
-import Feed from './pages/Feed';
-import Story from './pages/Story';
+import Signup from "./pages/Signup";
+import Login from "./pages/Login";
+import Feed from "./pages/Feed";
+import Story from "./pages/Story";
 
-import './App.css';
+import "./App.css";
 
 // create http link to connect to graphQl backend
 const httpLink = createHttpLink({
-  uri: "http://localhost:3003/graphql"
+  uri: "http://localhost:3003/graphql",
 });
 
 // Set AuthLink to tokens for authorization of logged in users
@@ -39,20 +40,22 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-
 function App() {
   return (
     <ApolloProvider client={client}>
       <Router>
         <Header />
-        <div className="container">
-          <Routes>
-            <Route path="" element={<Feed />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/story" element={<Story />} />
-          </Routes>
-        </div>
+        <body>
+          <main className="container">
+            <Routes>
+              <Route path="" element={<Feed />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/story" element={<Story />} />
+            </Routes>
+          </main>
+          <Footer />
+        </body>
       </Router>
     </ApolloProvider>
   );

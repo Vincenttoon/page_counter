@@ -1,7 +1,11 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat&family=Sail&display=swap");
 
-body {
+* {
   margin: 0;
+}
+
+/* index.css */
+body {
   font-family: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI",
     "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
     "Helvetica Neue", sans-serif;
@@ -9,9 +13,32 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: #fff9c9;
   color: #191919;
+  min-height: 100vh; /* Ensure content area takes at least the full viewport height */
+  display: flex;
+  flex-direction: column;
+  padding: 0; /* Set min-height to the full viewport height */
+}
+
+main {
+  flex-grow: 1;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex-grow: 1;
+}
+
+footer {
+  bottom: 0;
+  width: 100%;
 }

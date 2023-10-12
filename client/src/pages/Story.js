@@ -8,7 +8,7 @@ const Story = () => {
     
 
     return (
-        <main className='main-story'>
+        <div className='main-story'>
             <div className='story-div-1'>
                 <h2 className='thanks'> Thank you for visiting Page Counter.</h2>
                 <h4> Whether this is your first visit or you're a regular book worm, your support does not go unnoticed</h4>
@@ -26,7 +26,7 @@ const Story = () => {
                 <h3>Please enjoy your time on Page Counter</h3>
                 <p>If you liked this application, please checkout my other work on my <a href='https://github.com/Vincenttoon'>Github</a> and my <a href='https://vincent-toon-portfolio.vercel.app/'>Portfolio</a></p>
             </div>
-        </main>
+        </div>
     )
 }
 

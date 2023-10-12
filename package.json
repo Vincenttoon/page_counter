@@ -23,5 +23,8 @@
   "bugs": {
     "url": "https://github.com/Vincenttoon/page_counter/issues"
   },
-  "homepage": "https://github.com/Vincenttoon/page_counter#readme"
+  "homepage": "https://github.com/Vincenttoon/page_counter#readme",
+  "dependencies": {
+    "antd": "^5.10.0"
+  }
 }
