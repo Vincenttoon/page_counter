@@ -16,6 +16,7 @@ import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import Feed from "./pages/Feed";
 import Story from "./pages/Story";
+import LogBook from './pages/LogBook';
 
 import "./App.css";
 
@@ -54,6 +55,7 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/story" element={<Story />} />
               <Route path="/search" element={<SearchBooks />} />
+              <Route path="/log-book/:bookId" element={<LogBook />} />
             </Routes>
           </main>
           <Footer />

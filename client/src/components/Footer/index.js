@@ -11,22 +11,22 @@ const Footer = () => {
         <ul>
           <li>
             <a href="https://github.com/Vincenttoon">
-              <FaGithub fontSize={"2em"} />
+              <FaGithub fontSize={"1.5em"} />
             </a>
           </li>
           <li>
             <a href="https://www.linkedin.com/in/vincent-toon-4954b6162/">
-              <FaLinkedin fontSize={"2em"} />
+              <FaLinkedin fontSize={"1.5em"} />
             </a>
           </li>
           <li>
             <a href="https://vincent-toon-portfolio.vercel.app/">
-              <FaList fontSize={"2em"} />
+              <FaList fontSize={"1.5em"} />
             </a>
           </li>
           <li>
             <a href="https://www.facebook.com/vince.toon">
-              <FaFacebook fontSize={"2em"} />
+              <FaFacebook fontSize={"1.5em"} />
             </a>
           </li>
         </ul>

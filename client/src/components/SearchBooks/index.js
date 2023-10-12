@@ -40,7 +40,9 @@ const SearchBooks = () => {
 
   // Handle the reviewBook and saveBook mutations when the buttons are clicked
   const handleReviewBook = (book) => {
-    navigate("/log-book");
+    const bookId = book.volumeInfo.bookId;
+
+    navigate(`/log-book"/${bookId}`);
   };
 
   const handleSaveBook = (book) => {
@@ -48,7 +50,7 @@ const SearchBooks = () => {
     const input = {
       bookInfo: {
         // Populate the bookInfo object with the relevant data from your book object
-        bookId: book.volumeInfo.bookId, // Adjust the property name accordingly
+        bookId: book.id, // Adjust the property name accordingly
         authors: book.volumeInfo.authors, // For example, populate authors
         description: book.volumeInfo.description,
         image: book.volumeInfo.imageLinks.thumbnail,
@@ -153,9 +155,13 @@ const SearchBooks = () => {
             )}
             {Auth.loggedIn() && (
               <div>
-                <Link to="/log-book">
-                  <button className="log-btn"
-                  onClick={() => handleReviewBook(book)}>Log</button>
+                <Link to={`/log-book/${book.id}`}>
+                  <button
+                    className="log-btn"
+                    onClick={() => handleReviewBook(book)}
+                  >
+                    Log
+                  </button>
                 </Link>
                 <Link to="/profile">
                   <button
