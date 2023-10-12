@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useMutation } from "@apollo/client";
 import "../../styles/SearchBooks.scss";
-import { SAVE_BOOK, READ_BOOK } from "../../utils/mutations";
+import { SAVE_BOOK } from "../../utils/mutations";
 import Auth from "../../utils/auth";
 import { FaSearch, FaBookOpen } from "react-icons/fa";
 
@@ -11,9 +11,7 @@ const SearchBooks = () => {
   const [searchResults, setSearchResults] = useState([]);
 
   // Define the reviewBook and saveBook mutations and get the error and loading states
-  const [reviewBook, { loading: reviewLoading, error: reviewError }] =
-    useMutation(READ_BOOK);
-  const [saveBook, { loading: saveLoading, error: saveError }] =
+  const [saveBook] =
     useMutation(SAVE_BOOK);
 
   const handleSearch = async () => {

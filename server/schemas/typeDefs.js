@@ -67,6 +67,7 @@ const typeDefs = gql`
     oneUser(username: String!): User
     allBooksRead(username: String): [BooksRead]
     allSavedBooks(username: String): [SavedBooks]
+    bookById(bookId: ID!): BookInfo
   }
 
   type Mutation {
@@ -134,6 +135,10 @@ const typeDefs = gql`
   type DeletionResponse {
     message: String
   }
+
+  
 `;
 
 module.exports = typeDefs;
+
+

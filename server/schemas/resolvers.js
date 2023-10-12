@@ -73,6 +73,17 @@ const resolvers = {
         throw new Error("Failed to fetch saved books.");
       }
     },
+
+    bookById: async (_, { bookId }) => {
+      // Use Mongoose to find a book by its 'bookId' in your MongoDB
+      const book = await BookInfo.findOne({ bookId });
+
+      if (!book) {
+        throw new Error('Book not found');
+      }
+
+      return book;
+    },
   },
 
   //   VVV Mutations

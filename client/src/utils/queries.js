@@ -175,21 +175,21 @@ export const QUERY_ALL_BOOKS_READ = gql`
 export const BASIC_QUERY_ALL_BOOKS_READ = gql`
   {
     allBooksRead {
+      _id
+      user
+      bookInfo {
         _id
-        user
-        bookInfo {
-            _id
-            authors
-            title
-            link
-            image
-            averageRating
-            pageCount
-        }
-        commentCount
+        authors
+        title
+        link
+        image
+        averageRating
+        pageCount
+      }
+      commentCount
     }
   }
-`
+`;
 
 export const QUERY_ALL_SAVED_BOOKS = gql`
   {
@@ -212,3 +212,18 @@ export const QUERY_ALL_SAVED_BOOKS = gql`
   }
 `;
 
+export const QUERY_BOOK_BY_ID = gql`
+  query QueryBookById($bookId: ID!) {
+    bookById(bookId: $bookId) {
+      _id
+      authors
+      description
+      bookId
+      image
+      link
+      title
+      averageRating
+      pageCount
+    }
+  }
+`;
