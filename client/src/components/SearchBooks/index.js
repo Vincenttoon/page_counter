@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useMutation } from "@apollo/client";
 import "../../styles/SearchBooks.scss";
 import { SAVE_BOOK, READ_BOOK } from "../../utils/mutations";
@@ -35,29 +36,44 @@ const SearchBooks = () => {
     }
   }, []);
 
+  const navigate = useNavigate();
+
   // Handle the reviewBook and saveBook mutations when the buttons are clicked
   const handleReviewBook = (book) => {
-    // Ensure you have implemented the logic for the reviewBook mutation
-    reviewBook({
-      variables: {
-        input: {
-          // Pass the book data as required by your mutation
-          // For example: bookId, review, rating, pagesRead, etc.
-        },
-      },
-    });
+    navigate("/log-book");
   };
 
   const handleSaveBook = (book) => {
-    // Ensure you have implemented the logic for the saveBook mutation
+    // Create the input object with the book data
+    const input = {
+      bookInfo: {
+        // Populate the bookInfo object with the relevant data from your book object
+        bookId: book.volumeInfo.bookId, // Adjust the property name accordingly
+        authors: book.volumeInfo.authors, // For example, populate authors
+        description: book.volumeInfo.description,
+        image: book.volumeInfo.imageLinks.thumbnail,
+        link: book.volumeInfo.link,
+        title: book.volumeInfo.title,
+        averageRating: book.volumeInfo.averageRating,
+        pageCount: book.volumeInfo.pageCount,
+      },
+      savedAt: new Date().toISOString(), // Use the current date as an example
+    };
+
+    // Make the saveBook mutation
     saveBook({
       variables: {
-        input: {
-          // Pass the book data as required by your mutation
-          // For example: bookId, userId, savedAt, etc.
-        },
+        input,
       },
-    });
+    })
+      .then((response) => {
+        // Handle the response, for example, show a success message.
+        console.log("Book saved successfully:", response);
+      })
+      .catch((error) => {
+        // Handle errors, for example, show an error message.
+        console.error("Error saving book:", error);
+      });
   };
 
   // Function to toggle the description truncation
@@ -74,7 +90,13 @@ const SearchBooks = () => {
         <h2 className="h2-search-books">
           <FaSearch /> Find Books <FaBookOpen />{" "}
         </h2>
-        <p className="p-search"> ~ search powered by <a href="https://developers.google.com/books">Google Books Api</a>  ~ </p>
+        <p className="p-search">
+          {" "}
+          ~ search powered by{" "}
+          <a href="https://developers.google.com/books">
+            Google Books Api
+          </a> ~{" "}
+        </p>
         <div className="search-bar">
           <input
             type="text"
@@ -83,7 +105,9 @@ const SearchBooks = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
             className="input-text"
           />
-          <button onClick={handleSearch} className="search-btn">Search</button>
+          <button onClick={handleSearch} className="search-btn">
+            Search
+          </button>
         </div>
       </div>
 
@@ -92,7 +116,9 @@ const SearchBooks = () => {
           <div key={index} className="search-result">
             <h3>Title: {book.volumeInfo.title}</h3>
             {book.volumeInfo.authors && (
-              <h4>Author(s):<p>{book.volumeInfo.authors.join(", ")}</p></h4>
+              <h4>
+                Author(s):<p>{book.volumeInfo.authors.join(", ")}</p>
+              </h4>
             )}
             {book.volumeInfo.imageLinks && (
               <img
@@ -109,7 +135,10 @@ const SearchBooks = () => {
                     : `${book.volumeInfo.description.slice(0, 100)}...`}
                 </p>
                 {book.volumeInfo.description.length > 100 && (
-                  <button onClick={() => toggleDescription(index)} className="desc-btn">
+                  <button
+                    onClick={() => toggleDescription(index)}
+                    className="desc-btn"
+                  >
                     {book.truncateDescription ? "Show Less" : "Show More"}
                   </button>
                 )}
@@ -124,18 +153,18 @@ const SearchBooks = () => {
             )}
             {Auth.loggedIn() && (
               <div>
-                <button
-                  className="log-btn"
-                  onClick={() => handleReviewBook(book)}
-                >
-                  Log
-                </button>
-                <button
-                  className="stash-btn"
-                  onClick={() => handleSaveBook(book)}
-                >
-                  Stash
-                </button>
+                <Link to="/log-book">
+                  <button className="log-btn"
+                  onClick={() => handleReviewBook(book)}>Log</button>
+                </Link>
+                <Link to="/profile">
+                  <button
+                    className="stash-btn"
+                    onClick={() => handleSaveBook(book)}
+                  >
+                    Stash
+                  </button>
+                </Link>
               </div>
             )}
           </div>

@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/Vincenttoon/page_counter#readme",
   "dependencies": {
-    "antd": "^5.10.0"
+    "antd": "^5.10.0",
+    "react-router-dom": "^6.16.0"
   }
 }
