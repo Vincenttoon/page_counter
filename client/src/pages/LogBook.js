@@ -16,7 +16,7 @@ const LogBook = () => {
   const [pagesRead, setPagesRead] = useState(0);
   const [review, setReview] = useState("");
 
-  const [readBook] = useMutation(READ_BOOK);
+  const [readBook] = useMutation(READ_BOOK); // Use the existing Apollo Client instance
 
   useEffect(() => {
     if (error) {

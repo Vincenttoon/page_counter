@@ -135,10 +135,6 @@ const typeDefs = gql`
   type DeletionResponse {
     message: String
   }
-
-  
 `;
 
 module.exports = typeDefs;
-
-
