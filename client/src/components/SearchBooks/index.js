@@ -1,18 +1,31 @@
 import React, { useState, useEffect } from "react";
+import LogModal from "../LogModal";
 import { Link, useNavigate } from "react-router-dom";
 import { useMutation } from "@apollo/client";
 import "../../styles/SearchBooks.scss";
-import { SAVE_BOOK } from "../../utils/mutations";
+import { SAVE_BOOK, READ_BOOK } from "../../utils/mutations";
 import Auth from "../../utils/auth";
 import { FaSearch, FaBookOpen } from "react-icons/fa";
 
 const SearchBooks = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
+  const [isLogModalOpen, setIsLogModalOpen] = useState(false);
+  const [selectedBook, setSelectedBook] = useState(null);
+
+  const [submitReadBook] = useMutation(READ_BOOK);
 
   // Define the reviewBook and saveBook mutations and get the error and loading states
-  const [saveBook] =
-    useMutation(SAVE_BOOK);
+  const [saveBook] = useMutation(SAVE_BOOK);
+
+  const handleLogModalOpen = (book) => {
+    setSelectedBook(book);
+    setIsLogModalOpen(true);
+  };
+
+  const closeLogModal = () => {
+    setIsLogModalOpen(false);
+  };
 
   const handleSearch = async () => {
     try {
@@ -36,11 +49,44 @@ const SearchBooks = () => {
 
   const navigate = useNavigate();
 
-  // Handle the reviewBook and saveBook mutations when the buttons are clicked
-  const handleReviewBook = (book) => {
-    const bookId = book.volumeInfo.bookId;
+  const handleLogSubmit = async ({ rating, pagesRead, review }) => {
+    try {
+      // Ensure that a book is selected before attempting to log
+      if (!selectedBook) {
+        console.error("No book selected for review.");
+        return;
+      }
 
-    navigate(`/log-book"/${bookId}`);
+      // Prepare the variables for the mutation
+      const variables = {
+        bookInfoId: selectedBook.id,
+        rating,
+        pagesRead,
+        review,
+      };
+
+      // Execute the mutation
+      const { data } = await submitReadBook({ variables });
+
+      // Handle the result...
+    } catch (error) {
+      console.error("Error reading book:", error);
+    }
+
+    // Close the modal
+    setIsLogModalOpen(false);
+  };
+
+  // // Handle the reviewBook and saveBook mutations when the buttons are clicked
+  // const handleReviewBook = (book) => {
+  //   const bookId = book.volumeInfo.bookId;
+
+  //   navigate(`/log-book"/${bookId}`);
+  // };
+
+  const handleReviewBook = (book) => {
+    setSelectedBook(book);
+    setIsLogModalOpen(true);
   };
 
   const handleSaveBook = (book) => {
@@ -153,14 +199,12 @@ const SearchBooks = () => {
             )}
             {Auth.loggedIn() && (
               <div>
-                <Link to={`/log-book/${book.id}`}>
-                  <button
-                    className="log-btn"
-                    onClick={() => handleReviewBook(book)}
-                  >
-                    Log
-                  </button>
-                </Link>
+                <button
+                  className="log-btn"
+                  onClick={() => handleReviewBook(book)}
+                >
+                  Log
+                </button>
                 <Link to="/profile">
                   <button
                     className="stash-btn"
@@ -170,6 +214,15 @@ const SearchBooks = () => {
                   </button>
                 </Link>
               </div>
+            )}
+
+            {isLogModalOpen && (
+              <LogModal
+                isOpen={isLogModalOpen}
+                book={selectedBook}
+                onClose={() => setIsLogModalOpen(false)} // Close the modal
+                onLog={handleLogSubmit} // Pass your log function
+              />
             )}
           </div>
         ))}
