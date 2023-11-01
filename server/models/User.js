@@ -26,7 +26,7 @@ const userSchema = new Schema({
   savedBooks: [
     {
       type: Schema.Types.ObjectId,
-      ref: "StashedBooks",
+      ref: "SavedBooks",
     },
   ],
   booksLogged: [
@@ -97,7 +97,7 @@ userSchema.virtual("stashedBooksCount").get(function () {
   return this.stashedBooks.length;
 });
 
-userSchema.virtual("stashedBooksCount").get(function () {
+userSchema.virtual("savedBooksCount").get(function () {
   return this.savedBooks.length;
 });
 

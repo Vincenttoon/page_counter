@@ -7,8 +7,8 @@ export const QUERY_ME = gql`
       _id
       username
       email
-      booksReadCount
-      booksRead {
+      booksLoggedCount
+      booksLogged {
         _id
         createdAt
         review
@@ -31,11 +31,11 @@ export const QUERY_ME = gql`
           text
           createdAt
         }
-        commentCount # Include commentCount directly in the query
-        savedBooks {
+        commentCount
+        stashedBooks {
           _id
           user
-          savedAt
+          stashedAt
           bookInfo {
             _id
             authors
@@ -48,12 +48,12 @@ export const QUERY_ME = gql`
             pageCount
           }
         }
-        savedBooksCount
+        stashedBooksCount
         worms {
           _id
           user
           wormCount
-          booksReadCount
+          booksLoggedCount
         }
         wormCount
       }
@@ -67,19 +67,18 @@ export const QUERY_ME_BASIC = gql`
       _id
       username
       email
-      booksReadCount
-      savedBooksCount
+      booksLoggedCount
+      stashedBooksCount
       wormCount
       worms {
         _id
         user
         wormCount
-        booksReadCount
+        booksLoggedCount
       }
     }
   }
 `;
-
 // VVV Query All Users
 
 export const QUERY_USERS = gql`
@@ -88,14 +87,14 @@ export const QUERY_USERS = gql`
       _id
       username
       email
-      booksReadCount
-      savedBooksCount
+      booksLoggedCount
+      stashedBooksCount
       wormCount
       worms {
         _id
         user
         wormCount
-        booksReadCount
+        booksLoggedCount
       }
     }
   }
@@ -107,22 +106,22 @@ export const QUERY_USERS_BY_NAME = gql`
       _id
       username
       email
-      booksReadCount
-      savedBooksCount
+      booksLoggedCount
+      stashedBooksCount
       wormCount
       worms {
         _id
         user
         wormCount
-        booksReadCount
+        booksLoggedCount
       }
     }
   }
 `;
 
-export const QUERY_ALL_BOOKS_READ = gql`
+export const QUERY_ALL_BOOKS_LOGGED = gql`
   {
-    allBooksRead {
+    allBooksLogged {
       _id
       createdAt
       review
@@ -146,7 +145,7 @@ export const QUERY_ALL_BOOKS_READ = gql`
         text
         createdAt
       }
-      savedBooks {
+      stashedBooks {
         _id
         user
         savedAt
@@ -166,15 +165,15 @@ export const QUERY_ALL_BOOKS_READ = gql`
         _id
         user
         wormCount
-        booksReadCount
+        booksLoggedCount
       }
     }
   }
 `;
 
-export const BASIC_QUERY_ALL_BOOKS_READ = gql`
+export const BASIC_QUERY_ALL_BOOKS_LOGGED = gql`
   {
-    allBooksRead {
+    allBooksLogged {
       _id
       user
       bookInfo {
@@ -187,27 +186,6 @@ export const BASIC_QUERY_ALL_BOOKS_READ = gql`
         pageCount
       }
       commentCount
-    }
-  }
-`;
-
-export const QUERY_ALL_SAVED_BOOKS = gql`
-  {
-    allSavedBooks {
-      _id
-      savedAt
-      user
-      bookInfo {
-        _id
-        authors
-        description
-        bookId
-        image
-        link
-        title
-        averageRating
-        pageCount
-      }
     }
   }
 `;
@@ -245,6 +223,78 @@ export const QUERY_BOOK_BY_ID = gql`
       title
       averageRating
       pageCount
+    }
+  }
+`;
+
+export const QUERY_SAVED_BOOK_BY_ID_OR_TITLE = gql`
+  query QuerySavedBookByIdOrTitle($bookId: ID, $bookTitle: String) {
+    savedBookByIdOrTitle(bookId: $bookId, bookTitle: $bookTitle) {
+      _id
+      savedAt
+      user
+      bookInfo {
+        _id
+        authors
+        description
+        bookId
+        image
+        link
+        title
+        averageRating
+        pageCount
+      }
+    }
+  }
+`;
+
+export const QUERY_STASHED_BOOK_BY_ID_OR_TITLE = gql`
+  query QueryStashedBookByIdOrTitle($bookId: ID, $bookTitle: String) {
+    stashedBookByIdOrTitle(bookId: $bookId, bookTitle: $bookTitle) {
+      _id
+      stashedAt
+      user
+      bookInfo {
+        _id
+        authors
+        description
+        bookId
+        image
+        link
+        title
+        averageRating
+        pageCount
+      }
+    }
+  }
+`;
+
+export const QUERY_LOGGED_BOOK_BY_ID_OR_TITLE = gql`
+  query QueryLoggedBookByIdOrTitle($bookId: ID, $bookTitle: String) {
+    loggedBookByIdOrTitle(bookId: $bookId, bookTitle: $bookTitle) {
+      _id
+      createdAt
+      review
+      rating
+      pagesRead
+      user
+      bookInfo {
+        _id
+        authors
+        description
+        bookId
+        image
+        link
+        title
+        averageRating
+        pageCount
+      }
+      comments {
+        _id
+        user
+        text
+        createdAt
+      }
     }
   }
 `;
