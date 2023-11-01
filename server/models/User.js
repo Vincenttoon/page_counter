@@ -23,6 +23,12 @@ const userSchema = new Schema({
     required: true,
     minlength: 5,
   },
+  savedBooks: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "StashedBooks",
+    },
+  ],
   booksLogged: [
     {
       type: Schema.Types.ObjectId,
@@ -89,6 +95,10 @@ userSchema.virtual("booksLoggedCount").get(function () {
 
 userSchema.virtual("stashedBooksCount").get(function () {
   return this.stashedBooks.length;
+});
+
+userSchema.virtual("stashedBooksCount").get(function () {
+  return this.savedBooks.length;
 });
 
 // friends list length

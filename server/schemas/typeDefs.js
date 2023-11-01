@@ -5,7 +5,7 @@ const typeDefs = gql`
     _id: ID
     username: String
     email: String
-    booksLogged: [BooksRead]
+    booksLogged: [BooksLogged]
     booksLoggedCount: Int
     stashedBooks: [SavedBooks]
     stashedBooksCount: Int
@@ -74,7 +74,11 @@ const typeDefs = gql`
     oneUser(username: String!): User
     allBooksLogged(username: String): [BooksLogged]
     allSavedBooks(username: String): [SavedBooks]
+    allStashedBooks(username: String): [StashedBooks]
     bookById(bookId: ID!): BookInfo
+    stashedBookByIdOrTitle(bookId: ID, bookTitle: String): StashedBooks
+    savedBookByIdOrTitle(bookId: ID, bookTitle: String): SavedBooks
+    loggedBookByIdOrTitle(bookId: ID, bookTitle: String): BooksLogged
   }
 
   type Mutation {
@@ -87,10 +91,10 @@ const typeDefs = gql`
     removeStashedBook(bookId: ID!): RemoveStashedBookResponse
     addWorm(wormId: ID!): AddWormResponse
     removeWorm(wormId: ID!): RemoveWormResponse
-    logBook(input: LogBookInput!): BooksLogged
+    logBook(input: LoggedBookInput!): BooksLogged
     updateRating(input: UpdateRatingInput!): BooksLogged
     updateReview(input: UpdateReviewInput!): BooksLogged
-    deleteReview(bookReadId: ID!): DeletionResponse
+    deleteReview(bookLoggedId: ID!): DeletionResponse
     addComment(bookLoggedId: ID!, text: String!): Comment
     deleteComment(commentId: ID!): String
   }

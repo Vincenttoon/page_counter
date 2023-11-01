@@ -4,7 +4,8 @@ const BooksLogged = require("./BooksLogged");
 const BookInfo = require("./BookInfo");
 const Comment = require("./Comment");
 const Worms = require("./Worms");
-const SavedBooks = require("./StashedBooks");
+const StashedBooks = require("./StashedBooks");
+const SavedBooks = require("./SavedBooks");
 
 // Export all your models
 module.exports = {
@@ -13,5 +14,6 @@ module.exports = {
   BookInfo,
   Comment,
   Worms,
+  StashedBooks,
   SavedBooks,
 };

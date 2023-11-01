@@ -1,5 +1,11 @@
 const { AuthenticationError } = require("apollo-server-express");
-const { User, BooksRead, BookInfo } = require("../models");
+const {
+  User,
+  BooksLogged,
+  BookInfo,
+  StashedBooks,
+  SavedBooks,
+} = require("../models");
 const { signToken } = require("../utils/auth");
 
 const resolvers = {
@@ -18,7 +24,7 @@ const resolvers = {
     allUsers: async () => {
       return User.find()
         .select("-__v -password")
-        .populate("booksRead")
+        .populate("booksLogged")
         .populate("worms");
     },
 
@@ -41,13 +47,13 @@ const resolvers = {
 
     // Query for all books read vvv
 
-    allBooksRead: async (parent, { username }) => {
+    allBooksLogged: async (parent, { username }) => {
       try {
         const params = username ? { username } : {};
 
-        const booksRead = await BooksRead.find(params);
+        const booksLogged = await BooksLogged.find(params);
 
-        return booksRead;
+        return booksLogged;
       } catch (error) {
         console.error("Error fetching books read:", error);
         throw new Error("Failed to fetch books read.");
@@ -74,6 +80,26 @@ const resolvers = {
       }
     },
 
+    allStashedBooks: async (parent, { username }) => {
+      try {
+        const params = username ? { username } : {};
+
+        // Find the user based on the provided username (if any)
+        const user = await User.findOne(params).populate("stashedBooks");
+
+        if (!user) {
+          throw new UserInputError("User not found");
+        }
+
+        const stashedBooks = user.stashedBooks;
+
+        return stashedBooks;
+      } catch (error) {
+        console.error("Error fetching stashed books:", error);
+        throw new Error("Failed to fetch stashed books.");
+      }
+    },
+
     bookById: async (_, { bookId }) => {
       try {
         const book = await BookInfo.findById(bookId);
@@ -82,6 +108,69 @@ const resolvers = {
         throw new ApolloError("Book not found", "INTERNAL_SERVER_ERROR", {
           error,
         });
+      }
+    },
+
+    // Fetch a specific stashed book by its ID or title
+    stashedBookByIdOrTitle: async (parent, { bookId, bookTitle }) => {
+      try {
+        if (bookId) {
+          // If bookId is provided, search by ID
+          const stashedBook = await StashedBooks.findById(bookId);
+          return stashedBook;
+        } else if (bookTitle) {
+          // If bookTitle is provided, search by title
+          const stashedBook = await StashedBooks.findOne({ title: bookTitle });
+          return stashedBook;
+        } else {
+          // If neither bookId nor bookTitle is provided, return null
+          return null;
+        }
+      } catch (error) {
+        console.error("Error fetching stashed book:", error);
+        throw new Error("Failed to fetch stashed book.");
+      }
+    },
+
+    // Fetch a specific saved book by its ID or title
+    savedBookByIdOrTitle: async (parent, { bookId, bookTitle }) => {
+      try {
+        if (bookId) {
+          // If bookId is provided, search by ID
+          const savedBook = await SavedBooks.findById(bookId);
+          return savedBook;
+        } else if (bookTitle) {
+          // If bookTitle is provided, search by title
+          const savedBook = await SavedBooks.findOne({ title: bookTitle });
+          return savedBook;
+        } else {
+          // If neither bookId nor bookTitle is provided, return null
+          return null;
+        }
+      } catch (error) {
+        console.error("Error fetching saved book:", error);
+        throw new Error("Failed to fetch saved book.");
+      }
+    },
+
+    // Fetch a specific logged book by its ID or title
+    loggedBookByIdOrTitle: async (parent, { bookId, bookTitle }) => {
+      try {
+        if (bookId) {
+          // If bookId is provided, search by ID
+          const loggedBook = await BooksLogged.findById(bookId);
+          return loggedBook;
+        } else if (bookTitle) {
+          // If bookTitle is provided, search by title
+          const loggedBook = await BooksLogged.findOne({ title: bookTitle });
+          return loggedBook;
+        } else {
+          // If neither bookId nor bookTitle is provided, return null
+          return null;
+        }
+      } catch (error) {
+        console.error("Error fetching logged book:", error);
+        throw new Error("Failed to fetch logged book.");
       }
     },
   },
@@ -226,28 +315,28 @@ const resolvers = {
             _id: context.user._id,
             "stashedBooks.bookInfo": input.bookInfo,
           });
-    
+
           if (user) {
             return {
               success: false,
               message: "Book is already stashed",
             };
           }
-    
+
           // Add the book to the user's stashedBooks array
           const updatedUser = await User.findOneAndUpdate(
             { _id: context.user._id },
             { $addToSet: { stashedBooks: input } },
             { new: true }
           );
-    
+
           return {
             success: true,
             message: "Book stashed for later reading successfully",
             user: updatedUser,
           };
         }
-    
+
         throw new AuthenticationError("You need to be logged in!");
       } catch (error) {
         console.error("Error stashing book:", error);
@@ -256,42 +345,42 @@ const resolvers = {
     },
 
     // Remove Stashed Books:
-    
+
     removeStashedBook: async (parent, { bookId }, context) => {
       try {
         if (context.user) {
           // Find the user by ID
           const user = await User.findById(context.user._id);
-    
+
           if (!user) {
             throw new Error("User not found");
           }
-    
+
           // Check if the book exists in the user's stashedBooks array
           const stashedBookIndex = user.stashedBooks.findIndex(
             (stashedBook) => stashedBook.bookInfo.toString() === bookId
           );
-    
+
           if (stashedBookIndex === -1) {
             return {
               success: false,
               message: "Book not found in stashed list",
             };
           }
-    
+
           // Remove the book from the stashedBooks array
           user.stashedBooks.splice(stashedBookIndex, 1);
-    
+
           // Save the updated user
           await user.save();
-    
+
           return {
             success: true,
             message: "Book removed from stashed list",
             user,
           };
         }
-    
+
         throw new AuthenticationError("You need to be logged in!");
       } catch (error) {
         console.error("Error removing stashed book:", error);
@@ -389,33 +478,49 @@ const resolvers = {
 
     // review of book read vvv
 
-    readBook: async (
+    logBook: async (
       parent,
       { bookInfoId, review, rating, pagesRead },
       context
     ) => {
       try {
         if (context.user) {
-          // Create a new BooksRead entry
-          const newBookRead = new BooksRead({
-            user: context.user._id,
-            bookInfo: bookInfoId,
-            review,
-            rating,
-            pagesRead,
+          // Check if the book is already saved in the user's savedBooks
+          const user = await User.findOne({
+            _id: context.user._id,
+            "savedBooks.bookInfo": bookInfoId,
           });
 
-          // Save the new bookRead entry
-          const savedBookRead = await newBookRead.save();
+          if (user) {
+            // The book is already saved, so we can proceed to log it
 
-          // Update the user's `booksRead` array with the new bookRead ID
-          await User.findByIdAndUpdate(
-            context.user._id,
-            { $addToSet: { booksRead: savedBookRead._id } },
-            { new: true }
-          );
+            // Create a new BooksLogged entry
+            const newBookLogged = new BooksLogged({
+              user: context.user._id,
+              bookInfo: bookInfoId,
+              review,
+              rating,
+              pagesRead,
+            });
 
-          return savedBookRead;
+            // Save the new bookLogged entry
+            const savedBookLogged = await newBookLogged.save();
+
+            // Update the user's `booksLogged` array with the new bookLogged ID
+            await User.findByIdAndUpdate(
+              context.user._id,
+              { $addToSet: { booksLogged: savedBookLogged._id } },
+              { new: true }
+            );
+
+            return savedBookLogged;
+          } else {
+            // The book is not saved, so we should not proceed to log it
+            return {
+              success: false,
+              message: "You need to save the book before logging it.",
+            };
+          }
         }
         throw new AuthenticationError("You need to be logged in!");
       } catch (error) {
@@ -426,26 +531,26 @@ const resolvers = {
 
     // update rating on book read vvv
 
-    updateRating: async (parent, { bookReadId, rating }, context) => {
+    updateRating: async (parent, { bookLoggedId, rating }, context) => {
       try {
         if (context.user) {
-          // Find the bookRead entry by ID and ensure it belongs to the logged-in user
-          const bookRead = await BooksRead.findOne({
-            _id: bookReadId,
+          // Find the bookLogged entry by ID and ensure it belongs to the logged-in user
+          const bookLogged = await BooksLogged.findOne({
+            _id: bookLoggedId,
             user: context.user._id,
           });
 
-          if (!bookRead) {
+          if (!bookLogged) {
             throw new UserInputError("Read history entry not found");
           }
 
-          // Update the rating of the bookRead entry
-          bookRead.rating = rating;
+          // Update the rating of the bookLogged entry
+          bookLogged.rating = rating;
 
-          // Save the updated bookRead entry
-          const updatedBookRead = await bookRead.save();
+          // Save the updated bookLogged entry
+          const updatedbookLogged = await bookLogged.save();
 
-          return updatedBookRead;
+          return updatedbookLogged;
         }
         throw new AuthenticationError("You need to be logged in!");
       } catch (error) {
@@ -456,26 +561,26 @@ const resolvers = {
 
     // update review of book read vvv
 
-    updateReview: async (parent, { bookReadId, review }, context) => {
+    updateReview: async (parent, { bookLoggedId, review }, context) => {
       try {
         if (context.user) {
-          // Find the bookRead entry by ID and ensure it belongs to the logged-in user
-          const bookRead = await BooksRead.findOne({
-            _id: bookReadId,
+          // Find the bookLogged entry by ID and ensure it belongs to the logged-in user
+          const bookLogged = await BooksLogged.findOne({
+            _id: bookLoggedId,
             user: context.user._id,
           });
 
-          if (!bookRead) {
+          if (!bookLogged) {
             throw new UserInputError("Read history not found");
           }
 
-          // Update the review of the bookRead entry
-          bookRead.review = review;
+          // Update the review of the bookLogged entry
+          bookLogged.review = review;
 
-          // Save the updated bookRead entry
-          const updatedBookRead = await bookRead.save();
+          // Save the updated bookLogged entry
+          const updatedbookLogged = await bookLogged.save();
 
-          return updatedBookRead;
+          return updatedbookLogged;
         }
         throw new AuthenticationError("You need to be logged in!");
       } catch (error) {
@@ -486,21 +591,21 @@ const resolvers = {
 
     // delete review of book read vvv
 
-    deleteReview: async (parent, { bookReadId }, context) => {
+    deleteReview: async (parent, { bookLoggedId }, context) => {
       try {
         if (context.user) {
-          // Find the bookRead entry by ID and ensure it belongs to the logged-in user
-          const bookRead = await BooksRead.findOne({
-            _id: bookReadId,
+          // Find the bookLogged entry by ID and ensure it belongs to the logged-in user
+          const bookLogged = await BooksLogged.findOne({
+            _id: bookLoggedId,
             user: context.user._id,
           });
 
-          if (!bookRead) {
-            throw new UserInputError("BookRead entry not found");
+          if (!bookLogged) {
+            throw new UserInputError("bookLogged entry not found");
           }
 
-          // Delete the bookRead entry
-          await bookRead.remove();
+          // Delete the bookLogged entry
+          await bookLogged.remove();
 
           return { message: "Review deleted successfully" };
         }
@@ -513,23 +618,23 @@ const resolvers = {
 
     // ability to add a comment vvv
 
-    addComment: async (parent, { bookReadId, text }, context) => {
+    addComment: async (parent, { bookLoggedId, text }, context) => {
       try {
         if (context.user) {
-          // Find the bookRead entry by ID and ensure it belongs to the logged-in user
-          const bookRead = await BooksRead.findOne({
-            _id: bookReadId,
+          // Find the bookLogged entry by ID and ensure it belongs to the logged-in user
+          const bookLogged = await BooksLogged.findOne({
+            _id: bookLoggedId,
             user: context.user._id,
           });
 
-          if (!bookRead) {
-            throw new UserInputError("BookRead entry not found");
+          if (!bookLogged) {
+            throw new UserInputError("bookLogged entry not found");
           }
 
           // Create a new comment
           const newComment = new Comment({
             user: context.user._id,
-            booksRead: bookReadId,
+            booksLogged: bookLoggedId,
             text,
           });
 
@@ -560,7 +665,7 @@ const resolvers = {
           // Check if the user is the owner of the comment or the owner of the original post
           if (
             comment.user.toString() === context.user._id.toString() ||
-            comment.booksRead.user.toString() === context.user._id.toString()
+            comment.booksLogged.user.toString() === context.user._id.toString()
           ) {
             // Delete the comment
             await comment.remove();
