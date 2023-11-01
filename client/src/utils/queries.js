@@ -212,6 +212,27 @@ export const QUERY_ALL_SAVED_BOOKS = gql`
   }
 `;
 
+export const QUERY_ALL_STASHED_BOOKS = gql`
+  {
+    allStashedBooks {
+      _id
+      stashedAt
+      user
+      bookInfo {
+        _id
+        authors
+        description
+        bookId
+        image
+        link
+        title
+        averageRating
+        pageCount
+      }
+    }
+  }
+`;
+
 export const QUERY_BOOK_BY_ID = gql`
   query QueryBookById($bookId: ID!) {
     bookById(bookId: $bookId) {
@@ -227,4 +248,3 @@ export const QUERY_BOOK_BY_ID = gql`
     }
   }
 `;
-

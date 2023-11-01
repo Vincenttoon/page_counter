@@ -75,14 +75,14 @@ const resolvers = {
     },
 
     bookById: async (_, { bookId }) => {
-      // Use Mongoose to find a book by its 'bookId' in your MongoDB
-      const book = await BookInfo.findOne({ bookId });
-
-      if (!book) {
-        throw new Error('Book not found');
+      try {
+        const book = await BookInfo.findById(bookId);
+        return book;
+      } catch (error) {
+        throw new ApolloError("Book not found", "INTERNAL_SERVER_ERROR", {
+          error,
+        });
       }
-
-      return book;
     },
   },
 
@@ -213,6 +213,89 @@ const resolvers = {
       } catch (error) {
         console.error("Error removing saved book:", error);
         throw new Error("Failed to remove saved book");
+      }
+    },
+
+    // Stash book for later
+
+    stashBook: async (parent, { input }, context) => {
+      try {
+        if (context.user) {
+          // Check if the book is already stashed to prevent duplicates
+          const user = await User.findOne({
+            _id: context.user._id,
+            "stashedBooks.bookInfo": input.bookInfo,
+          });
+    
+          if (user) {
+            return {
+              success: false,
+              message: "Book is already stashed",
+            };
+          }
+    
+          // Add the book to the user's stashedBooks array
+          const updatedUser = await User.findOneAndUpdate(
+            { _id: context.user._id },
+            { $addToSet: { stashedBooks: input } },
+            { new: true }
+          );
+    
+          return {
+            success: true,
+            message: "Book stashed for later reading successfully",
+            user: updatedUser,
+          };
+        }
+    
+        throw new AuthenticationError("You need to be logged in!");
+      } catch (error) {
+        console.error("Error stashing book:", error);
+        throw new Error("Failed to stash book for later reading");
+      }
+    },
+
+    // Remove Stashed Books:
+    
+    removeStashedBook: async (parent, { bookId }, context) => {
+      try {
+        if (context.user) {
+          // Find the user by ID
+          const user = await User.findById(context.user._id);
+    
+          if (!user) {
+            throw new Error("User not found");
+          }
+    
+          // Check if the book exists in the user's stashedBooks array
+          const stashedBookIndex = user.stashedBooks.findIndex(
+            (stashedBook) => stashedBook.bookInfo.toString() === bookId
+          );
+    
+          if (stashedBookIndex === -1) {
+            return {
+              success: false,
+              message: "Book not found in stashed list",
+            };
+          }
+    
+          // Remove the book from the stashedBooks array
+          user.stashedBooks.splice(stashedBookIndex, 1);
+    
+          // Save the updated user
+          await user.save();
+    
+          return {
+            success: true,
+            message: "Book removed from stashed list",
+            user,
+          };
+        }
+    
+        throw new AuthenticationError("You need to be logged in!");
+      } catch (error) {
+        console.error("Error removing stashed book:", error);
+        throw new Error("Failed to remove stashed book");
       }
     },
 

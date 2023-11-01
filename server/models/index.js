@@ -1,15 +1,15 @@
 // Import all your model files
 const User = require("./User");
-const BooksRead = require("./BooksRead");
+const BooksLogged = require("./BooksLogged");
 const BookInfo = require("./BookInfo");
 const Comment = require("./Comment");
 const Worms = require("./Worms");
-const SavedBooks = require("./SavedBooks");
+const SavedBooks = require("./StashedBooks");
 
 // Export all your models
 module.exports = {
   User,
-  BooksRead,
+  BooksLogged,
   BookInfo,
   Comment,
   Worms,

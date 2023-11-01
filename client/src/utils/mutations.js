@@ -64,6 +64,43 @@ export const REMOVE_SAVED_BOOK = gql`
   }
 `;
 
+export const STASH_BOOK = gql`
+  mutation stashBook($input: BookInput!) {
+    stashBook(input: $input) {
+      success
+      message
+      user {
+        _id
+        username
+        stashedBooks {
+          _id
+          user
+          stashedAt
+          bookInfo {
+            _id
+            authors
+            description
+            bookId
+            image
+            link
+            title
+            averageRating
+            pageCount
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const REMOVE_STASHED_BOOK = gql`
+  mutation removeStashedBook($bookId: ID!) {
+    removeStashedBook(id: $bookId) {
+      _id
+    }
+  }
+`;
+
 export const ADD_WORM = gql`
   mutation addWorm($id: ID!) {
     addWorm(wormId: $id) {

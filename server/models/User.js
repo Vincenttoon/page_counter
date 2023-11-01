@@ -3,6 +3,7 @@ const { Schema } = mongoose;
 const bcrypt = require("bcrypt");
 
 const dateFormat = require("../utils/dateFormat");
+const BooksLogged = require("./BooksLogged");
 
 const userSchema = new Schema({
   username: {
@@ -22,16 +23,16 @@ const userSchema = new Schema({
     required: true,
     minlength: 5,
   },
-  booksRead: [
+  booksLogged: [
     {
       type: Schema.Types.ObjectId,
-      ref: "BooksRead",
+      ref: "BooksLogged",
     },
   ],
-  savedBooks: [
+  stashedBooks: [
     {
       type: Schema.Types.ObjectId,
-      ref: "SavedBooks",
+      ref: "StashedBooks",
     },
   ],
   worms: [
@@ -74,20 +75,20 @@ userSchema.methods.isCorrectPassword = async function (password) {
 
 // Calculate total pages read
 userSchema.methods.calculateTotalPagesRead = async function () {
-  const booksRead = await BooksRead.find({ user: this._id });
-  const totalPagesRead = booksRead.reduce(
-    (total, bookRead) => total + bookRead.pagesRead,
+  const booksLogged = await BooksLogged.find({ user: this._id });
+  const totalPagesRead = booksLogged.reduce(
+    (total, bookLogged) => total + bookLogged.pagesRead,
     0
   );
   return totalPagesRead;
 };
 
-userSchema.virtual("booksReadCount").get(function () {
-  return this.booksRead.length;
+userSchema.virtual("booksLoggedCount").get(function () {
+  return this.booksLogged.length;
 });
 
-userSchema.virtual("savedBooksCount").get(function () {
-  return this.savedBooks.length;
+userSchema.virtual("stashedBooksCount").get(function () {
+  return this.stashedBooks.length;
 });
 
 // friends list length

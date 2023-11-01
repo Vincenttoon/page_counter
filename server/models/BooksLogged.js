@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 const dateFormat = require("../utils/dateFormat");
 
-const booksReadSchema = new Schema({
+const booksLoggedSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
     ref: "User",
@@ -40,10 +40,10 @@ const booksReadSchema = new Schema({
   ],
 });
 
-booksReadSchema.virtual("commentCount").get(function () {
+booksLoggedSchema.virtual("commentCount").get(function () {
   return this.comments.length;
 });
 
-const BooksRead = mongoose.model("BooksRead", booksReadSchema);
+const BooksLogged = mongoose.model("BooksLogged", booksLoggedSchema);
 
-module.exports = BooksRead;
+module.exports = BooksLogged;

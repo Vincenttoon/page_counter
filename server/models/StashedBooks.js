@@ -3,7 +3,7 @@ const { Schema } = mongoose;
 
 const dateFormat = require("../utils/dateFormat");
 
-const savedBooksSchema = new Schema({
+const stashedBooksSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
     ref: "User",
@@ -19,6 +19,6 @@ const savedBooksSchema = new Schema({
   },
 });
 
-const SavedBooks = mongoose.model("SavedBooks", savedBooksSchema);
+const StashedBooks = mongoose.model("StashedBooks", stashedBooksSchema);
 
-module.exports = SavedBooks;
+module.exports = StashedBooks;

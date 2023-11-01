@@ -19,10 +19,15 @@ const LogBook = () => {
   const [readBook] = useMutation(READ_BOOK); // Use the existing Apollo Client instance
 
   useEffect(() => {
+    console.log("Data from useQuery:", data);
+    console.log("Error from useQuery:", error);
+  
     if (error) {
       console.error("Error: ", error);
-    } else {
+    } else if (data?.bookById !== null) {
+      console.log("BookInfo from useQuery:", data?.bookById);
       setBookInfo(data?.bookById || {});
+      console.log("BookInfo after setBookInfo:", bookInfo);
     }
   }, [data, error]);
 

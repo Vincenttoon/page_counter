@@ -5,15 +5,15 @@ const typeDefs = gql`
     _id: ID
     username: String
     email: String
-    booksRead: [BooksRead]
-    booksReadCount: Int
-    savedBooks: [SavedBooks]
-    savedBooksCount: Int
+    booksLogged: [BooksRead]
+    booksLoggedCount: Int
+    stashedBooks: [SavedBooks]
+    stashedBooksCount: Int
     worms: [Worms]
     wormsCount: Int
   }
 
-  type BooksRead {
+  type BooksLogged {
     _id: ID
     user: User
     bookInfo: BookInfo
@@ -44,7 +44,7 @@ const typeDefs = gql`
   type Comment {
     _id: ID
     user: User
-    booksRead: BooksRead
+    booksLogged: BooksLogged
     text: String
     createdAt: String
   }
@@ -61,11 +61,18 @@ const typeDefs = gql`
     savedAt: String
   }
 
+  type StashedBooks {
+    _id: ID
+    user: User
+    bookInfo: BookInfo
+    stashedAt: String
+  }
+
   type Query {
     me: User
     allUsers: [User]
     oneUser(username: String!): User
-    allBooksRead(username: String): [BooksRead]
+    allBooksLogged(username: String): [BooksLogged]
     allSavedBooks(username: String): [SavedBooks]
     bookById(bookId: ID!): BookInfo
   }
@@ -76,13 +83,15 @@ const typeDefs = gql`
     addUser(username: String!, email: String!, password: String!): Auth
     saveBook(input: SaveBookInput!): SaveBookResponse
     removeSavedBook(bookId: ID!): RemoveSavedBookResponse
+    stashBook(input: StashBookInput!): StashBookResponse
+    removeStashedBook(bookId: ID!): RemoveStashedBookResponse
     addWorm(wormId: ID!): AddWormResponse
     removeWorm(wormId: ID!): RemoveWormResponse
-    readBook(input: ReadBookInput!): BooksRead
-    updateRating(input: UpdateRatingInput!): BooksRead
-    updateReview(input: UpdateReviewInput!): BooksRead
+    logBook(input: LogBookInput!): BooksLogged
+    updateRating(input: UpdateRatingInput!): BooksLogged
+    updateReview(input: UpdateReviewInput!): BooksLogged
     deleteReview(bookReadId: ID!): DeletionResponse
-    addComment(bookReadId: ID!, text: String!): Comment
+    addComment(bookLoggedId: ID!, text: String!): Comment
     deleteComment(commentId: ID!): String
   }
 
@@ -90,7 +99,11 @@ const typeDefs = gql`
     bookInfo: ID!
   }
 
-  input ReadBookInput {
+  input StashBookInput {
+    bookInfo: ID!
+  }
+
+  input LoggedBookInput {
     bookInfoId: ID!
     review: String!
     rating: Float!
@@ -98,12 +111,12 @@ const typeDefs = gql`
   }
 
   input UpdateRatingInput {
-    bookReadId: ID!
+    bookLoggedId: ID!
     rating: Float!
   }
 
   input UpdateReviewInput {
-    bookReadId: ID!
+    bookLoggedId: ID!
     review: String!
   }
 
@@ -114,7 +127,19 @@ const typeDefs = gql`
     user: User
   }
 
+  type StashBookResponse {
+    success: Boolean!
+    message: String!
+    user: User
+  }
+
   type RemoveSavedBookResponse {
+    success: Boolean!
+    message: String!
+    user: User
+  }
+
+  type RemoveStashedBookResponse {
     success: Boolean!
     message: String!
     user: User

@@ -156,7 +156,7 @@ const SearchBooks = () => {
                 <Link to={`/log-book/${book.id}`}>
                   <button
                     className="log-btn"
-                    onClick={() => handleReviewBook(book)}
+                    onClick={() => handleSaveBook(book)}
                   >
                     Log
                   </button>
