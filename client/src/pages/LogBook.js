@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { useQuery, useMutation } from "@apollo/client";
 
 import { QUERY_BOOK_BY_ID } from "../utils/queries";
-import { READ_BOOK } from "../utils/mutations";
+import { LOG_BOOK } from "../utils/mutations";
 
 const LogBook = () => {
   const { bookId } = useParams();
@@ -16,7 +16,7 @@ const LogBook = () => {
   const [pagesRead, setPagesRead] = useState(0);
   const [review, setReview] = useState("");
 
-  const [readBook] = useMutation(READ_BOOK); // Use the existing Apollo Client instance
+  const [logBook] = useMutation(LOG_BOOK); // Use the existing Apollo Client instance
 
   useEffect(() => {
     console.log("Data from useQuery:", data);
@@ -35,7 +35,7 @@ const LogBook = () => {
     e.preventDefault();
 
     try {
-      const { data } = await readBook({
+      const { data } = await logBook({
         variables: {
           id: bookInfo._id, // Use the bookInfo._id from the fetched data
           rating,

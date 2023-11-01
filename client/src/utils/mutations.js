@@ -35,6 +35,7 @@ export const SAVE_BOOK = gql`
       user {
         _id
         username
+        savedBooksCount
         savedBooks {
           _id
           user
@@ -129,14 +130,14 @@ export const REMOVE_WORM = gql`
   }
 `;
 
-export const READ_BOOK = gql`
-  mutation readBook(
+export const LOG_BOOK = gql`
+  mutation logBook(
     $bookInfoId: ID!
     $review: String
     $rating: Float
     $pagesRead: Int
   ) {
-    readBook(
+    logBook(
       bookInfoId: $bookInfoId
       review: $review
       rating: $rating

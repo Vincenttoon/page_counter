@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useMutation } from "@apollo/client";
 import "../../styles/SearchBooks.scss";
-import { SAVE_BOOK } from "../../utils/mutations";
+import { SAVE_BOOK, STASH_BOOK } from "../../utils/mutations";
 import Auth from "../../utils/auth";
 import { FaSearch, FaBookOpen } from "react-icons/fa";
 
@@ -11,8 +11,8 @@ const SearchBooks = () => {
   const [searchResults, setSearchResults] = useState([]);
 
   // Define the reviewBook and saveBook mutations and get the error and loading states
-  const [saveBook] =
-    useMutation(SAVE_BOOK);
+  const [saveBook] = useMutation(SAVE_BOOK);
+  const [stashBook] = useMutation(STASH_BOOK);
 
   const handleSearch = async () => {
     try {
@@ -36,20 +36,13 @@ const SearchBooks = () => {
 
   const navigate = useNavigate();
 
-  // Handle the reviewBook and saveBook mutations when the buttons are clicked
-  const handleReviewBook = (book) => {
-    const bookId = book.volumeInfo.bookId;
-
-    navigate(`/log-book"/${bookId}`);
-  };
-
   const handleSaveBook = (book) => {
     // Create the input object with the book data
     const input = {
       bookInfo: {
         // Populate the bookInfo object with the relevant data from your book object
-        bookId: book.id, // Adjust the property name accordingly
-        authors: book.volumeInfo.authors, // For example, populate authors
+        bookId: book.id,
+        authors: book.volumeInfo.authors,
         description: book.volumeInfo.description,
         image: book.volumeInfo.imageLinks.thumbnail,
         link: book.volumeInfo.link,
@@ -57,7 +50,7 @@ const SearchBooks = () => {
         averageRating: book.volumeInfo.averageRating,
         pageCount: book.volumeInfo.pageCount,
       },
-      savedAt: new Date().toISOString(), // Use the current date as an example
+      savedAt: new Date().toISOString(),
     };
 
     // Make the saveBook mutation
@@ -73,6 +66,40 @@ const SearchBooks = () => {
       .catch((error) => {
         // Handle errors, for example, show an error message.
         console.error("Error saving book:", error);
+      });
+  };
+
+  const handleStashBook = (book) => {
+    // Create the input object with the book data
+    const input = {
+      bookInfo: {
+        // Populate the bookInfo object with the relevant data from your book object
+        bookId: book.id,
+        authors: book.volumeInfo.authors,
+        description: book.volumeInfo.description,
+        image: book.volumeInfo.imageLinks.thumbnail,
+        link: book.volumeInfo.link,
+        title: book.volumeInfo.title,
+        averageRating: book.volumeInfo.averageRating,
+        pageCount: book.volumeInfo.pageCount,
+      },
+      savedAt: new Date().toISOString(),
+    };
+
+    // Make the saveBook mutation
+    stashBook({
+      variables: {
+        input,
+      },
+    })
+      .then((response) => {
+        // Handle the response, for example, show a success message.
+        console.log("Book stashed successfully:", response);
+
+      })
+      .catch((error) => {
+        // Handle errors, for example, show an error message.
+        console.error("Error stashing book:", error);
       });
   };
 
@@ -164,7 +191,7 @@ const SearchBooks = () => {
                 <Link to="/profile">
                   <button
                     className="stash-btn"
-                    onClick={() => handleSaveBook(book)}
+                    onClick={() => handleStashBook(book)}
                   >
                     Stash
                   </button>
