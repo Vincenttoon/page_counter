@@ -9,8 +9,8 @@ import { FaSearch, FaBookOpen } from "react-icons/fa";
 const SearchBooks = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
+  const [savedBookIds, setSavedBookIds] = useState(Auth.getSavedBookIds()); // Use a function to get saved book IDs from local storage
 
-  // Define the reviewBook and saveBook mutations and get the error and loading states
   const [saveBook] = useMutation(SAVE_BOOK);
   const [stashBook] = useMutation(STASH_BOOK);
 
@@ -37,73 +37,86 @@ const SearchBooks = () => {
   const navigate = useNavigate();
 
   const handleSaveBook = (book) => {
-    // Create the input object with the book data
-    const input = {
-      bookInfo: {
-        // Populate the bookInfo object with the relevant data from your book object
-        bookId: book.id,
-        authors: book.volumeInfo.authors,
-        description: book.volumeInfo.description,
-        image: book.volumeInfo.imageLinks.thumbnail,
-        link: book.volumeInfo.link,
-        title: book.volumeInfo.title,
-        averageRating: book.volumeInfo.averageRating,
-        pageCount: book.volumeInfo.pageCount,
-      },
-      savedAt: new Date().toISOString(),
-    };
-
-    // Make the saveBook mutation
-    saveBook({
-      variables: {
-        input,
-      },
-    })
-      .then((response) => {
-        // Handle the response, for example, show a success message.
-        console.log("Book saved successfully:", response);
+    if (book && book.volumeInfo) {
+      // Create the input object with the book data
+      const input = {
+        bookInfo: {
+          // Populate the bookInfo object with the relevant data from your book object
+          bookId: book.id,
+          authors: book.volumeInfo.authors,
+          description: book.volumeInfo.description,
+          image: book.volumeInfo.imageLinks.thumbnail,
+          link: book.volumeInfo.link,
+          title: book.volumeInfo.title,
+          averageRating: book.volumeInfo.averageRating,
+          pageCount: book.volumeInfo.pageCount,
+        },
+        savedAt: new Date().toISOString(),
+      };
+  
+      // Make the saveBook mutation
+      saveBook({
+        variables: {
+          input,
+        },
       })
-      .catch((error) => {
-        // Handle errors, for example, show an error message.
-        console.error("Error saving book:", error);
-      });
-  };
+        .then((response) => {
+          // Handle the response, for example, show a success message.
+          console.log("Book saved successfully:", response);
+        })
+        .catch((error) => {
+          // Handle errors, for example, show an error message.
+          console.error("Error saving book:", error);
+        });
+    } else {
+      console.error("Invalid book data");
+    }
+  };  
 
-  const handleStashBook = (book) => {
-    // Create the input object with the book data
+  const handleStashBook = (bookId) => {
+    const bookToStash = searchResults.find((book) => book.id === bookId);
+
+    const token = Auth.loggedIn() ? Auth.getToken() : null;
+
+    if (!token) {
+      return false;
+    }
+
     const input = {
       bookInfo: {
-        // Populate the bookInfo object with the relevant data from your book object
-        bookId: book.id,
-        authors: book.volumeInfo.authors,
-        description: book.volumeInfo.description,
-        image: book.volumeInfo.imageLinks.thumbnail,
-        link: book.volumeInfo.link,
-        title: book.volumeInfo.title,
-        averageRating: book.volumeInfo.averageRating,
-        pageCount: book.volumeInfo.pageCount,
+        bookId: bookId,
+        authors: bookToStash.volumeInfo.authors || ["No author to display"],
+        title: bookToStash.volumeInfo.title,
+        description: bookToStash.volumeInfo.description,
+        image: bookToStash.volumeInfo.imageLinks?.thumbnail || "",
       },
-      savedAt: new Date().toISOString(),
+      stashedAt: new Date().toISOString(),
     };
 
-    // Make the saveBook mutation
     stashBook({
       variables: {
         input,
       },
     })
       .then((response) => {
-        // Handle the response, for example, show a success message.
-        console.log("Book stashed successfully:", response);
-
+        if (response.data.stashBook.success) {
+          // Handle success, show a success message or update state as needed
+          console.log(
+            "Book stashed successfully:",
+            response.data.stashBook.message
+          );
+        } else {
+          console.error(
+            "Error stashing book:",
+            response.data.stashBook.message
+          );
+        }
       })
       .catch((error) => {
-        // Handle errors, for example, show an error message.
         console.error("Error stashing book:", error);
       });
   };
 
-  // Function to toggle the description truncation
   const toggleDescription = (index) => {
     const updatedSearchResults = [...searchResults];
     updatedSearchResults[index].truncateDescription =

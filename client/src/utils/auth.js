@@ -44,6 +44,21 @@ class AuthService {
     // this will reload the page and reset the state of the application
     window.location.assign("/");
   }
+
+  getSavedBookIds() {
+    const savedBooks = JSON.parse(localStorage.getItem("saved_books")) || [];
+    return savedBooks.map((book) => book.bookId);
+  }
+
+  getStashedBookIds() {
+    const stashedBooks = JSON.parse(localStorage.getItem("stashed_books")) || [];
+    return stashedBooks.map((book) => book.bookId);
+  }
+
+  getLoggedBookIds() {
+    const loggedBooks = JSON.parse(localStorage.getItem("books_logged")) || [];
+    return loggedBooks.map((book) => book.bookId);
+  }
 }
 const authServiceInstance = new AuthService();
 export default authServiceInstance;

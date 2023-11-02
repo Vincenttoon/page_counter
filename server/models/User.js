@@ -5,6 +5,8 @@ const bcrypt = require("bcrypt");
 const dateFormat = require("../utils/dateFormat");
 const BooksLogged = require("./BooksLogged");
 
+const savedBooksSchema = require("./SavedBooks")
+
 const userSchema = new Schema({
   username: {
     type: String,
@@ -23,12 +25,7 @@ const userSchema = new Schema({
     required: true,
     minlength: 5,
   },
-  savedBooks: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "SavedBooks",
-    },
-  ],
+  savedBooks: [savedBooksSchema],
   booksLogged: [
     {
       type: Schema.Types.ObjectId,

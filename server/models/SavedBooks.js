@@ -19,6 +19,5 @@ const savedBooksSchema = new Schema({
   },
 });
 
-const SavedBooks = mongoose.model("SavedBooks", savedBooksSchema);
 
-module.exports = SavedBooks;
+module.exports = savedBooksSchema;

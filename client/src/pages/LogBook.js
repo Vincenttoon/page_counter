@@ -2,12 +2,13 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useQuery, useMutation } from "@apollo/client";
 
-import { QUERY_BOOK_BY_ID } from "../utils/queries";
+import { QUERY_SAVED_BOOK_BY_ID_OR_TITLE } from "../utils/queries";
 import { LOG_BOOK } from "../utils/mutations";
 
 const LogBook = () => {
   const { bookId } = useParams();
-  const { error, data } = useQuery(QUERY_BOOK_BY_ID, {
+  const { error, data } = useQuery(QUERY_SAVED_BOOK_BY_ID_OR_TITLE, {
+    // Change QUERY_BOOK_BY_ID to QUERY_SAVED_BOOK_BY_ID_OR_TITLE
     variables: { bookId },
   });
 
@@ -16,18 +17,13 @@ const LogBook = () => {
   const [pagesRead, setPagesRead] = useState(0);
   const [review, setReview] = useState("");
 
-  const [logBook] = useMutation(LOG_BOOK); // Use the existing Apollo Client instance
+  const [logBook] = useMutation(LOG_BOOK);
 
   useEffect(() => {
-    console.log("Data from useQuery:", data);
-    console.log("Error from useQuery:", error);
-  
     if (error) {
       console.error("Error: ", error);
-    } else if (data?.bookById !== null) {
-      console.log("BookInfo from useQuery:", data?.bookById);
-      setBookInfo(data?.bookById || {});
-      console.log("BookInfo after setBookInfo:", bookInfo);
+    } else if (data?.bookById) {
+      setBookInfo(data.bookById);
     }
   }, [data, error]);
 
@@ -37,7 +33,7 @@ const LogBook = () => {
     try {
       const { data } = await logBook({
         variables: {
-          id: bookInfo._id, // Use the bookInfo._id from the fetched data
+          id: bookInfo._id,
           rating,
           pagesRead,
           review,
@@ -45,7 +41,9 @@ const LogBook = () => {
       });
 
       console.log("Book read successfully:", data?.readBook);
+
       // Optionally, you can redirect the user to another page here
+      // For example, after successfully logging a book, you can use a router to navigate to the user's bookshelf or another page.
     } catch (error) {
       console.error("Error reading book:", error);
     }
