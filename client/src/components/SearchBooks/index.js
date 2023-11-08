@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useMutation } from "@apollo/client";
 import "../../styles/SearchBooks.scss";
+import { saveBookIds, getSavedBookIds } from "../../utils/localStorage";
 import { SAVE_BOOK, STASH_BOOK } from "../../utils/mutations";
 import Auth from "../../utils/auth";
 import { FaSearch, FaBookOpen } from "react-icons/fa";
@@ -26,14 +27,6 @@ const SearchBooks = () => {
     }
   };
 
-  useEffect(() => {
-    if (Auth.loggedIn()) {
-      console.log("User is logged in");
-    } else {
-      console.log("User is not logged in");
-    }
-  }, []);
-
   const navigate = useNavigate();
 
   const handleSaveBook = (book) => {
@@ -53,7 +46,10 @@ const SearchBooks = () => {
         },
         savedAt: new Date().toISOString(),
       };
-  
+
+      // Log the input object to the console
+      console.log("Input object:", input);
+
       // Make the saveBook mutation
       saveBook({
         variables: {
@@ -72,7 +68,6 @@ const SearchBooks = () => {
       console.error("Invalid book data");
     }
   };
-  console.log(handleSaveBook);
 
   const handleStashBook = (bookId) => {
     const bookToStash = searchResults.find((book) => book.id === bookId);

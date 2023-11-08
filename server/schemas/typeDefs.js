@@ -5,9 +5,10 @@ const typeDefs = gql`
     _id: ID
     username: String
     email: String
+    savedBooks: [SavedBooks]
     booksLogged: [BooksLogged]
     booksLoggedCount: Int
-    stashedBooks: [SavedBooks]
+    stashedBooks: [StashedBooks]
     stashedBooksCount: Int
     worms: [Worms]
     wormsCount: Int
@@ -71,7 +72,9 @@ const typeDefs = gql`
   type Query {
     me: User
     allUsers: [User]
+    user(username: String!): User
     oneUser(username: String!): User
+    getUserSavedBooks(username: String!): User
     allBooksLogged(username: String): [BooksLogged]
     allSavedBooks(username: String): [SavedBooks]
     allStashedBooks(username: String): [StashedBooks]
@@ -85,7 +88,7 @@ const typeDefs = gql`
     # Define your mutations here
     login(email: String!, password: String!): Auth
     addUser(username: String!, email: String!, password: String!): Auth
-    saveBook(input: SaveBookInput!): SaveBookResponse
+    saveBook(input: SaveBookInput): SaveBookResponse
     removeSavedBook(bookId: ID!): RemoveSavedBookResponse
     stashBook(input: StashBookInput!): StashBookResponse
     removeStashedBook(bookId: ID!): RemoveStashedBookResponse

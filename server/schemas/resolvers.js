@@ -45,6 +45,12 @@ const resolvers = {
       }
     },
 
+    user: async (parent, { username }, context) => {
+      // Implement code to fetch user data from your data source.
+      const user = await User.findOne({ username }).populate('savedBooks');
+      return user;
+    },
+
     // Query for all books read vvv
 
     allBooksLogged: async (parent, { username }) => {
@@ -227,23 +233,9 @@ const resolvers = {
     saveBook: async (parent, { input }, context) => {
       try {
         if (context.user) {
-          // Check if the book is already saved to prevent duplicates
-          const user = await User.findOne({
-            _id: context.user._id,
-            "savedBooks.bookInfo": input.bookInfo,
-          });
-
-          if (user) {
-            return {
-              success: false,
-              message: "Book is already saved",
-            };
-          }
-
-          // Add the book to the user's savedBooks array
           const updatedUser = await User.findOneAndUpdate(
             { _id: context.user._id },
-            { $addToSet: { savedBooks: input } },
+            { $addToSet: { savedBooks: input } }, // Save the book by its ID
             { new: true }
           );
 

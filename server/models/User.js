@@ -5,58 +5,68 @@ const bcrypt = require("bcrypt");
 const dateFormat = require("../utils/dateFormat");
 const BooksLogged = require("./BooksLogged");
 
-const savedBooksSchema = require("./SavedBooks")
-
-const userSchema = new Schema({
-  username: {
-    type: String,
-    required: true,
-    unique: true,
-    trim: true,
+const userSchema = new Schema(
+  {
+    username: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      match: [/.+@.+\..+/, "Must match an email address!"],
+    },
+    password: {
+      type: String,
+      required: true,
+      minlength: 5,
+    },
+    savedBooks: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "SavedBooks",
+      },
+    ],
+    booksLogged: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "BooksLogged",
+      },
+    ],
+    stashedBooks: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "StashedBooks",
+      },
+    ],
+    worms: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Worms",
+      },
+    ],
+    dates: {
+      createdAt: {
+        type: Date,
+        default: Date.now,
+        get: (timestamp) => dateFormat(timestamp),
+      },
+      updatedAt: {
+        type: Date,
+        default: Date.now,
+        get: (timestamp) => dateFormat(timestamp),
+      },
+    },
   },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-    match: [/.+@.+\..+/, "Must match an email address!"],
-  },
-  password: {
-    type: String,
-    required: true,
-    minlength: 5,
-  },
-  savedBooks: [savedBooksSchema],
-  booksLogged: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "BooksLogged",
+  {
+    toJSON: {
+      virtuals: true,
     },
-  ],
-  stashedBooks: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "StashedBooks",
-    },
-  ],
-  worms: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "Worms",
-    },
-  ],
-  dates: {
-    createdAt: {
-      type: Date,
-      default: Date.now,
-      get: (timestamp) => dateFormat(timestamp),
-    },
-    updatedAt: {
-      type: Date,
-      default: Date.now,
-      get: (timestamp) => dateFormat(timestamp),
-    },
-  },
-});
+  }
+);
 
 // set up pre-save middleware to create password
 userSchema.pre("save", async function (next) {
