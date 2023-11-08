@@ -14,6 +14,8 @@ export const QUERY_ME = gql`
         title
         image
         link
+        averageRating
+        pageCount
       }
     }
   }

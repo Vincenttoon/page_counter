@@ -45,7 +45,7 @@ const SearchBooks = () => {
       const { items } = await response.json();
 
       const bookData = items.map((book) => ({
-        bookId: book.volumeInfo.id,
+        bookId: book.id,
         authors: book.volumeInfo.authors || ["No author to display"],
         description: book.volumeInfo.description,
         image: book.volumeInfo.imageLinks?.thumbnail,
@@ -65,7 +65,9 @@ const SearchBooks = () => {
   };
 
   const handleSaveBook = async (bookId) => {
+    console.log("Saving book with ID:", bookId);
     const bookToSave = searchedBooks.find((book) => book.bookId === bookId);
+    console.log("bookToSave:", bookToSave);
 
     // get token
     const token = Auth.loggedIn() ? Auth.getToken() : null;
@@ -74,7 +76,6 @@ const SearchBooks = () => {
       return false;
     }
 
-    // places book to save into the BookInput typeDef by using it's intern variable name
     try {
       const response = await saveBook({
         variables: {
@@ -83,13 +84,23 @@ const SearchBooks = () => {
       });
 
       if (!response) {
-        throw new Error("something went wrong!");
+        throw new Error("Something went wrong!");
       }
 
-      // if book successfully saves to user's account, save book id to state
+      // Check if the save was successful
+      if (response.data.saveBook) {
+        console.log("Book saved successfully!");
+        // You can set a success message state here if needed
+      } else {
+        console.error("Failed to save book.");
+        // You can set an error message state here if needed
+      }
+
+      // if book successfully saves to the user's account, save book id to state
       setSavedBookIds([...savedBookIds, bookToSave.bookId]);
     } catch (err) {
       console.error(err);
+      // Handle the error and set an error message state if needed
     }
   };
 
@@ -137,10 +148,7 @@ const SearchBooks = () => {
               </h4>
             )}
             {book.image && (
-              <img
-                src={book.image}
-                alt={`Cover of ${book.title}`}
-              />
+              <img src={book.image} alt={`Cover of ${book.title}`} />
             )}
 
             {book.description && (
@@ -165,10 +173,10 @@ const SearchBooks = () => {
             {book.averageRating && <p>Average Rating: {book.averageRating}</p>}
             {Auth.loggedIn() && (
               <div>
-                <Link to={`/log-book/${book.id}`}>
+                <Link to={`/log-book/${book.bookId}`}>
                   <button
                     className="log-btn"
-                    onClick={() => handleSaveBook(book)}
+                    onClick={() => handleSaveBook(book.bookId)}
                   >
                     Log
                   </button>

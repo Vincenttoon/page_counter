@@ -11,12 +11,14 @@ const typeDefs = gql`
   }
 
   type Book {
-    bookId: String!
+    bookId: String
     authors: [String]
     description: String
     title: String!
     image: String
     link: String
+    averageRating: Float
+    pageCount: Int
   }
 
   type Auth {
@@ -35,6 +37,8 @@ const typeDefs = gql`
     title: String
     image: String
     link: String
+    averageRating: Float
+    pageCount: Int
   }
 
   type Mutation {

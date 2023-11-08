@@ -40,6 +40,8 @@ export const SAVE_BOOK = gql`
         link
         title
         description
+        averageRating
+        pageCount
       }
     }
   }
@@ -59,7 +61,6 @@ export const REMOVE_BOOK = gql`
         title
         image
         link
-        title
         averageRating
         pageCount
       }
