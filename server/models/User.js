@@ -22,16 +22,10 @@ const userSchema = new Schema({
     required: true,
     minlength: 5,
   },
-  booksRead: [
+  stashedBooks: [
     {
       type: Schema.Types.ObjectId,
-      ref: "BooksRead",
-    },
-  ],
-  savedBooks: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "SavedBooks",
+      ref: "Books",
     },
   ],
   worms: [
@@ -73,20 +67,20 @@ userSchema.methods.isCorrectPassword = async function (password) {
 };
 
 // Calculate total pages read
-userSchema.methods.calculateTotalPagesRead = async function () {
-  const booksRead = await BooksRead.find({ user: this._id });
-  const totalPagesRead = booksRead.reduce(
-    (total, bookRead) => total + bookRead.pagesRead,
-    0
-  );
-  return totalPagesRead;
-};
+// userSchema.methods.calculateTotalPagesRead = async function () {
+//   const booksRead = await BooksRead.find({ user: this._id });
+//   const totalPagesRead = booksRead.reduce(
+//     (total, bookRead) => total + bookRead.pagesRead,
+//     0
+//   );
+//   return totalPagesRead;
+// };
 
-userSchema.virtual("booksReadCount").get(function () {
-  return this.booksRead.length;
-});
+// userSchema.virtual("booksReadCount").get(function () {
+//   return this.booksRead.length;
+// });
 
-userSchema.virtual("savedBooksCount").get(function () {
+userSchema.virtual("stashedBooksCount").get(function () {
   return this.savedBooks.length;
 });
 

@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
-const bookInfoSchema = new Schema({
+const bookSchema = new Schema({
   authors: {
     type: String,
   },
@@ -30,10 +30,10 @@ const bookInfoSchema = new Schema({
   },
   pageCount: {
     type: Number,
-    default: 0
-  }
+    default: 0,
+  },
 });
 
-const BookInfo = mongoose.model("BookInfo", bookInfoSchema);
+const Books = mongoose.model("Books", bookSchema);
 
-module.exports = BookInfo;
+module.exports = Books;
