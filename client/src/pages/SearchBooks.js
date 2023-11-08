@@ -173,22 +173,22 @@ const SearchBooks = () => {
             {book.averageRating && <p>Average Rating: {book.averageRating}</p>}
             {Auth.loggedIn() && (
               <div>
-                <Link to={`/log-book/${book.bookId}`}>
+                {/* <Link to={`/log-book/${book.bookId}`}>
                   <button
                     className="log-btn"
                     onClick={() => handleSaveBook(book.bookId)}
                   >
                     Log
                   </button>
-                </Link>
-                {/* <Link to="/profile">
+                </Link> */}
+                <Link to="/profile">
                   <button
                     className="stash-btn"
-                    onClick={() => handleStashBook(book)}
+                    onClick={() => handleSaveBook(book.bookId)}
                   >
                     Stash
                   </button>
-                </Link> */}
+                </Link>
               </div>
             )}
           </div>
