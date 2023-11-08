@@ -59,6 +59,9 @@ export const REMOVE_BOOK = gql`
         title
         image
         link
+        title
+        averageRating
+        pageCount
       }
     }
   }

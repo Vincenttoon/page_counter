@@ -81,7 +81,7 @@ userSchema.methods.isCorrectPassword = async function (password) {
 // });
 
 userSchema.virtual("stashedBooksCount").get(function () {
-  return this.savedBooks.length;
+  return this.stashedBooks.length;
 });
 
 // friends list length

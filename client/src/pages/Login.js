@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useMutation } from "@apollo/client";
 import "../styles/Login.scss"; // You can create a separate style file for the login page
-import { LOGIN } from "../utils/mutations"; // Assuming you have a LOGIN_USER mutation defined
+import { LOGIN_USER } from "../utils/mutations"; // Assuming you have a LOGIN_USER mutation defined
 import Auth from "../utils/auth";
 
 const Login = () => {
@@ -10,7 +10,7 @@ const Login = () => {
     password: "",
   });
 
-  const [login, { error }] = useMutation(LOGIN);
+  const [login, { error }] = useMutation(LOGIN_USER);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
