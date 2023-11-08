@@ -71,7 +71,8 @@ const SearchBooks = () => {
     } else {
       console.error("Invalid book data");
     }
-  };  
+  };
+  console.log(handleSaveBook);
 
   const handleStashBook = (bookId) => {
     const bookToStash = searchResults.find((book) => book.id === bookId);
