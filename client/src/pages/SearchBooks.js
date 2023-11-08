@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Auth from "../utils/auth";
-import "../styles/SearchBooks.scss";
+import "../styles/SearchBooks.scss"
 import { Link, useNavigate } from "react-router-dom";
 import { saveBookIds, getSavedBookIds } from "../utils/localStorage";
 import { useMutation } from "@apollo/react-hooks";
@@ -114,16 +114,12 @@ const SearchBooks = () => {
   return (
     <div className="container">
       <div className="search-div">
-        <h2 className="h2-search-books">
-          <FaSearch /> Find Books <FaBookOpen />{" "}
-        </h2>
-        <p className="p-search">
-          {" "}
-          ~ search powered by{" "}
-          <a href="https://developers.google.com/books">
-            Google Books Api
-          </a> ~{" "}
-        </p>
+        <div className="books-div">
+          <h2 className="h2-search-books">
+            <FaSearch /> Find Books <FaBookOpen />{" "}
+          </h2>
+        </div>
+
         <div className="search-bar">
           <input
             type="text"
@@ -135,6 +131,16 @@ const SearchBooks = () => {
           <button onClick={handleFormSubmit} className="search-btn">
             Search
           </button>
+        </div>
+
+        <div className="p-info">
+          <p className="p-search">
+            {" "}
+            ~ search powered by{" "}
+            <a href="https://developers.google.com/books">
+              Google Books Api
+            </a> ~{" "}
+          </p>
         </div>
       </div>
 

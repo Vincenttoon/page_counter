@@ -10,12 +10,13 @@ import { setContext } from "@apollo/client/link/context";
 
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-import SearchBooks from "./pages/SearchBooks";
 
+import SearchBooks from "./pages/SearchBooks";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import Feed from "./pages/Feed";
 import Story from "./pages/Story";
+import Profile from "./pages/Profile";
 
 import "./App.css";
 
@@ -54,6 +55,7 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/story" element={<Story />} />
               <Route path="/search" element={<SearchBooks />} />
+              <Route path="/profile" element={<Profile />} />
             </Routes>
           </main>
           <Footer />

@@ -1,5 +1,14 @@
 @import "colors";
 
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  // margin: 2rem;
+}
+
 .search-results {
   display: flex;
   flex-wrap: wrap;
@@ -7,6 +16,33 @@
   justify-content: center; // Center content horizontally
   align-items: center; // Center content vertically
   text-align: center; // Center text
+}
+.search-div {
+  margin-top: 1rem;
+  width: 85%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.search-bar {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1.2rem;
+  width: 80%;
+
+  input {
+    width: 60%;
+  }
+
+  button {
+    width: 25%;
+  }
+ 
+}
+
+.p-info {
+  margin-bottom: 1.5rem;
 }
 
 .search-result {

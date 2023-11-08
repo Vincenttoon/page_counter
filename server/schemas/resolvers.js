@@ -15,7 +15,13 @@ const resolvers = {
       }
       throw new AuthenticationError("Not logged in");
     },
+
+    // Query individual User through GraphQl
+    user: async (parent, { username }) => {
+      return User.findOne({ username }).select("-__v -password");
+    },
   },
+
   // mutations of user data for web functionality, including: login, addUser, saveBook and RemoveBook
   Mutation: {
     login: async (parent, { email, password }) => {
